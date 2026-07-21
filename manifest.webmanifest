@@ -1,0 +1,11 @@
+{
+  "name": "오늘 15시간",
+  "short_name": "오늘15시간",
+  "description": "24시간에서 중요한 시간을 하나씩 떼어내는 학생용 하루 설계 앱",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f4f0e8",
+  "theme_color": "#f4f0e8",
+  "lang": "ko-KR",
+  "icons": []
+}
