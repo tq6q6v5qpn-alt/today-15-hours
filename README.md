@@ -7,6 +7,21 @@
 - 저장: 각 기기의 브라우저 `localStorage`
 - 백업: 앱 오른쪽 위 `•••` → **전체 기록 백업**
 
+## 구조
+
+- `index.html`: 화면 구조
+- `styles.css`: 모바일·접근성 스타일
+- `app.js`: 브라우저 화면과 저장소 연결
+- `core.js`: 플랫폼 독립 시간 계산·백업 검증
+- `tests/`: 핵심 불변식 자동 테스트
+- `DATA_CONTRACT.md`: 향후 iOS·Android 공통 데이터 규칙
+
+```bash
+npm test
+```
+
+현재 PWA는 iPhone Safari와 Android Chrome에서 사용할 수 있다. 장기적으로 iOS는 SwiftUI, Android는 Kotlin/Jetpack Compose로 구현하되 `DATA_CONTRACT.md`와 `core.js`의 테스트 결과를 공통 기준으로 삼는다.
+
 ## 개발 원칙
 
 - 초 단위 통제, 점수, 연속 출석, 실패 표시를 만들지 않는다.
@@ -18,4 +33,3 @@
 - 자동 감지는 확정이 아니라 사용자가 확인할 제안이어야 한다.
 
 자세한 설계 맥락과 다음 단계는 [PROJECT_CONTEXT.md](PROJECT_CONTEXT.md)에 있습니다.
-
