@@ -31,6 +31,7 @@
 
     <section class="view" id="focusView"><div class="hero"><h1>한 번에 하나를<br>선명하게.</h1><p class="lead">시간을 더 쪼개지 않고, 시작과 끝을 또렷하게 만듭니다.</p></div><div id="focusBody"><div class="empty">계획 화면에서 활동 하나를 누르면 집중 설계를 할 수 있어요.</div></div></section>
   </main>
+  <button class="sudden-fab" id="openSudden" aria-label="갑자기 생긴 일정 추가"><span>＋</span> 지금 생김</button>
   <nav class="nav"><button class="on" data-view="planView"><span>◫</span>시간</button><button data-view="todayView"><span>○</span>순서</button><button data-view="calendarView"><span>▦</span>달력</button><button data-view="focusView"><span>⌕</span>집중</button></nav>
 </div>
 
@@ -40,7 +41,10 @@
 
 <div class="sheetbg" id="trackSheet"><div class="sheet"><div class="handle"></div><h2 id="trackTitle">경로 기록</h2><p class="sheetlead">모든 단계를 쓸 필요는 없습니다. 실제로 일어난 순간만 탭하세요.</p><div class="track-stages" id="trackStages"></div><div class="actions"><button class="btn outline" id="undoTrack">마지막 기록 취소</button><button class="btn outline" id="closeTrack">닫기</button></div></div></div>
 
+<div class="sheetbg" id="suddenSheet"><div class="sheet"><div class="handle"></div><div class="live-label">실시간 추가</div><h2>지금 무엇이 생겼나요?</h2><p class="sheetlead">예상 시간을 놓으면 남은 24시간이 즉시 줄어듭니다. 나중에 실제 길이에 맞게 다시 조절할 수 있습니다.</p><div class="sudden-presets" id="suddenPresets"><button class="on" data-sudden="식사">🍚 식사</button><button data-sudden="이동">🚶 이동</button><button data-sudden="휴식">🌿 휴식</button><button data-sudden="통화·대화">☎️ 통화·대화</button><button data-sudden="기다림">⌛ 기다림</button><button data-sudden="기타">＋ 기타</button></div><div class="field"><label for="suddenName">이름</label><input id="suddenName" maxlength="40" value="식사"></div><div class="live-time"><div><small>이 사건에 떼어놓을 시간</small><strong id="suddenTime">30분</strong></div><input id="suddenRange" type="range" min="10" max="360" step="10" value="30" aria-label="갑자기 생긴 일정 시간"><div class="live-adjust"><button data-sudden-adjust="-60">−1시간</button><button data-sudden-adjust="-10">−10분</button><button data-sudden-adjust="10">＋10분</button><button data-sudden-adjust="60">＋1시간</button></div></div><div class="budget-preview" id="suddenPreview"><span>추가 뒤 남는 시간</span><strong id="suddenRemain">0분</strong></div><div class="actions"><button class="btn primary" id="addSudden">지금 일정에 넣기</button><button class="btn outline" id="closeSudden">닫기</button></div></div></div>
+
 <div class="sheetbg" id="dataSheet"><div class="sheet"><div class="handle"></div><h2>데이터와 테스트</h2><p class="sheetlead">기록은 이 기기에만 있습니다. 가끔 파일로 백업해두면 네이티브 앱으로도 가져갈 수 있습니다.</p><div class="data-actions"><button class="btn primary" id="exportData">전체 기록 백업</button><button class="btn outline" id="importData">백업 파일 가져오기</button><input id="importFile" type="file" accept="application/json,.json" hidden><button class="btn soft" id="shareApp">가족·지인에게 앱 링크 보내기</button></div><div class="feedback-box"><label for="feedbackNote">시험 사용 중 불편했던 점</label><div class="choice-help">자유롭게 적어두면 백업 파일에 함께 들어갑니다.</div><textarea id="feedbackNote" maxlength="2000" placeholder="예: 수영 준비 시작 버튼을 자주 잊음"></textarea><button class="btn outline" id="saveFeedback">메모 저장</button></div><div class="notice">가져오기는 백업에 있는 날짜를 현재 기록과 합칩니다. 같은 날짜가 있으면 가져온 기록으로 바뀝니다.</div><div class="actions"><button class="btn outline" id="closeData">닫기</button></div></div></div>
+<div class="undo-toast" id="undoToast" role="status" aria-live="polite"><span id="undoText"></span><button id="undoCancel">되돌리기</button></div>
 <script src="core.js"></script>
 <script src="app.js"></script>
 </body></html>
