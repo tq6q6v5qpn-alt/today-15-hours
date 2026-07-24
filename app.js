@@ -21,37 +21,44 @@ function remaining(){return Core.remaining(state)}
 function updateBudget(){let r=remaining(),pct=Math.max(0,Math.min(100,r/available()*100));$('#remainTop').textContent=minsText(r);$('#remainCard').textContent=minsText(r);$('#budgetFill').style.width=pct+'%';$('#budgetFill').style.background=r<0?'var(--red)':r<120?'var(--orange)':'var(--green)';$('#sleepLabel').textContent=`${minsText(state.sleep*60)} 보호`;$('#overmsg').classList.toggle('on',r<0)}
 function renderDayMap(){
   const colors=['#2f8065','#cb7a3a','#537ba3','#7b64a8','#bc5965','#6e8741','#9b6b42'];
-  const sleepMin=Math.round(state.sleep*60),named=planned(),left=remaining();
-  const segments=[];let cursor=0;
-  const addSegment=(minutes,color,label)=>{
-    const start=cursor,end=cursor+Math.max(0,minutes);
-    segments.push({start,end,color,label});cursor=end;
+  const sleepMin=Math.round(state.sleep*60),named=planned(),left=remaining(),rows=schedule();
+  const minuteColors=Array(1440).fill('#e7e5dd');
+  const toMinute=time=>{const[h,m]=time.split(':').map(Number);return h*60+m};
+  const paint=(start,duration,color)=>{
+    for(let offset=0;offset<Math.min(1440,Math.max(0,duration));offset++)minuteColors[(start+offset)%1440]=color;
   };
-  addSegment(sleepMin,'#263d55','수면');
-  state.tasks.forEach((task,index)=>addSegment(taskTotal(task),colors[index%colors.length],task.name));
-  if(cursor<1440)addSegment(1440-cursor,'#e7e5dd','열린 시간');
+  paint(toMinute(state.sleepAt),sleepMin,'#263d55');
+  rows.forEach((task,index)=>paint(toMinute(task.start),taskTotal(task),colors[index%colors.length]));
+  const now=new Date(),today=state.date===keyDate(),nowMinute=now.getHours()*60+now.getMinutes(),preciseMinute=nowMinute+now.getSeconds()/60;
   const cellMinutes=1440/dayGridCount;
   const cellColor=(start,end)=>{
-    const pieces=segments.map(segment=>{
-      const from=Math.max(start,segment.start),to=Math.min(end,segment.end);
-      return to>from?{color:segment.color,size:to-from}:null;
-    }).filter(Boolean);
-    if(!pieces.length)return'#9b3e35';
-    if(pieces.length===1)return pieces[0].color;
+    const first=Math.floor(start),last=Math.ceil(end),runs=[];
+    for(let minute=first;minute<last;minute++){
+      const color=minuteColors[Math.min(1439,minute)];
+      if(runs.at(-1)?.color===color)runs.at(-1).size+=1;
+      else runs.push({color,size:1});
+    }
+    if(runs.length===1)return runs[0].color;
     let used=0,parts=[];
-    pieces.forEach(piece=>{const from=used/(end-start)*100;used+=piece.size;const to=used/(end-start)*100;parts.push(`${piece.color} ${from}% ${to}%`)});
+    runs.forEach(run=>{const from=used/(last-first)*100;used+=run.size;const to=used/(last-first)*100;parts.push(`${run.color} ${from}% ${to}%`)});
     return`linear-gradient(90deg,${parts.join(',')})`;
   };
   const cells=Array.from({length:dayGridCount},(_,index)=>{
     const start=index*cellMinutes,end=start+cellMinutes;
-    return`<i style="background:${cellColor(start,end)}" aria-hidden="true"></i>`;
+    const current=today&&preciseMinute>=start&&preciseMinute<end;
+    const elapsed=today&&end<=preciseMinute;
+    const progress=current?Math.max(0,Math.min(100,(preciseMinute-start)/(end-start)*100)):0;
+    const title=`${plus('00:00',start)}~${plus('00:00',end%1440)}`;
+    return`<i class="${elapsed?'elapsed ':''}${current?'current':''}" style="background:${cellColor(start,end)};--elapsed:${progress}%" title="${title}" aria-hidden="true"></i>`;
   }).join('');
   const taskRows=state.tasks.map((task,index)=>{
-    const total=taskTotal(task),width=Math.max(1,Math.min(100,total/1440*100));
-    return `<div class="allocation-row"><div class="allocation-name"><span style="background:${colors[index%colors.length]}"></span><b>${esc(task.name)}</b><time>${minsText(total)}</time></div><div class="allocation-track"><i style="width:${width}%;background:${colors[index%colors.length]}"></i></div></div>`;
+    const total=taskTotal(task),width=Math.max(1,Math.min(100,total/1440*100)),row=rows[index];
+    return `<div class="allocation-row"><div class="allocation-name"><span style="background:${colors[index%colors.length]}"></span><b>${esc(task.name)}</b><time>${displayTime(row.start)} · ${minsText(total)}</time></div><div class="allocation-track"><i style="width:${width}%;background:${colors[index%colors.length]}"></i></div></div>`;
   }).join('');
   const unit=dayGridCount===24?'1시간':dayGridCount===48?'30분':'1분';
-  $('#dayMap').innerHTML=`<div class="grid-switch" aria-label="시간 격자 단위"><button data-grid-count="24" class="${dayGridCount===24?'on':''}">24칸</button><button data-grid-count="48" class="${dayGridCount===48?'on':''}">48칸</button><button data-grid-count="1440" class="${dayGridCount===1440?'on':''}">1분 × 1,440</button></div><div class="time-cube-board cubes-${dayGridCount} ${left<0?'over':''}" role="img" aria-label="24시간 격자. 한 칸 ${unit}. 수면 ${minsText(sleepMin)}, 이름 붙인 시간 ${minsText(named)}, 남은 시간 ${minsText(left)}">${cells}</div><div class="cube-caption"><b>1칸 = ${unit}</b><span>전체 ${dayGridCount.toLocaleString('ko-KR')}칸은 언제나 24시간</span></div><div class="cube-insight"><small>오늘의 바닥 단위</small><strong>평범한 하루 안에 실제로<br><em>1,440개의 작은 선택지</em>가 있었다는 사실.</strong></div><div class="day-numbers cube-numbers"><div><small>수면</small><strong>${minsText(sleepMin)}</strong></div><div><small>이름 붙인 시간</small><strong>${minsText(named)}</strong></div><div class="${left<0?'negative':''}"><small>아직 열린 시간</small><strong>${minsText(left)}</strong></div></div>${taskRows?`<div class="allocation-list">${taskRows}</div>`:'<div class="day-empty">아직 열린 칸뿐입니다.<br>시간을 놓을 때마다 실제 크기만큼 색이 들어옵니다.</div>'}<p class="day-principle">칸을 모두 채우는 것이 목표는 아닙니다. 작은 칸에도 의도를 주고 실제로 살아내는 것이 시간의 밀도를 높입니다.</p>`;
+  const active=rows.find(task=>{const delta=(nowMinute-toMinute(task.start)+1440)%1440;return delta<taskTotal(task)});
+  const nowBlock=today?`<div class="now-coordinate"><div><small>지금 여기</small><strong>${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}</strong></div><div><b>오늘의 ${(nowMinute+1).toLocaleString('ko-KR')}번째 분</b><span>${active?esc(active.name):'아직 열린 시간'} · 자정까지 ${minsText(1440-nowMinute)}</span></div></div>`:`<div class="viewing-date">선택한 날짜의 00:00부터 23:59까지</div>`;
+  $('#dayMap').innerHTML=`<div class="grid-switch" aria-label="시간 격자 단위"><button data-grid-count="24" class="${dayGridCount===24?'on':''}">24칸</button><button data-grid-count="48" class="${dayGridCount===48?'on':''}">48칸</button><button data-grid-count="1440" class="${dayGridCount===1440?'on':''}">1분 × 1,440</button></div>${nowBlock}<div class="time-axis"><span>00:00</span><span>12:00</span><span>23:59</span></div><div class="time-cube-board cubes-${dayGridCount} ${left<0?'over':''}" role="img" aria-label="00시부터 23시 59분까지의 24시간 격자. 한 칸 ${unit}. 수면 ${minsText(sleepMin)}, 이름 붙인 시간 ${minsText(named)}, 남은 시간 ${minsText(left)}">${cells}</div><div class="cube-caption"><b>1칸 = ${unit}</b><span>왼쪽 위에서 오른쪽 아래로 시간이 흐릅니다</span></div><div class="cube-insight"><small>오늘의 바닥 단위</small><strong>평범한 하루 안에 실제로<br><em>1,440개의 작은 선택지</em>가 있었다는 사실.</strong></div><div class="day-numbers cube-numbers"><div><small>수면</small><strong>${minsText(sleepMin)}</strong></div><div><small>이름 붙인 시간</small><strong>${minsText(named)}</strong></div><div class="${left<0?'negative':''}"><small>아직 열린 시간</small><strong>${minsText(left)}</strong></div></div>${taskRows?`<div class="allocation-list">${taskRows}</div>`:'<div class="day-empty">아직 열린 칸뿐입니다.<br>시간을 놓을 때마다 실제 시각 위치에 색이 들어옵니다.</div>'}<p class="day-principle">어두워진 칸은 실패가 아니라 이미 지나온 좌표입니다. 밝은 칸은 지금부터 선택할 수 있는 자리입니다.</p>`;
   $$('[data-grid-count]').forEach(button=>button.onclick=()=>{dayGridCount=+button.dataset.gridCount;localStorage.setItem('today15_grid_v1',String(dayGridCount));renderDayMap()});
 }
 function renderTasks(){let box=$('#taskList');box.innerHTML=state.tasks.length?state.tasks.map((t,i)=>`<button class="task ${remaining()<0?'over':''}" data-focus="${i}"><div class="tasktop"><span class="dot"></span><b>${esc(t.name)}</b>${t.origin==='sudden'?'<span class="live-badge">지금 생김</span>':''}</div>${t.focus?.question?`<p>${esc(t.focus.question)}</p>`:'<p>눌러서 시작과 끝을 선명하게 만들기</p>'}<div class="taskbreak"><span>활동 ${minsText(t.min)}</span>${t.prepMin?`<span>준비 ${minsText(t.prepMin)}</span>`:''}${t.travelMin?`<span>이동 ${minsText(t.travelMin)}</span>`:''}<span>전체 ${minsText(taskTotal(t))}</span></div><span class="del" data-del="${i}">×</span></button>`).join(''):'<div class="empty">아직 떼어놓은 시간이 없습니다.<br>위의 빠른 버튼부터 눌러보세요.</div>';$$('[data-del]').forEach(b=>b.onclick=e=>{e.stopPropagation();cancelTask(+b.dataset.del)});$$('[data-focus]').forEach(b=>b.onclick=()=>openFocus(+b.dataset.focus))}
@@ -61,7 +68,7 @@ function recordEvent(type,task,detail={}){state.events=Array.isArray(state.event
 function cancelTask(index){let task=state.tasks[index];if(!task)return;lastCancelled={task,index};state.tasks.splice(index,1);recordEvent('cancelled',task,{minutes:taskTotal(task)});save();renderAll();$('#undoText').textContent=`${task.name} 취소 · ${minsText(taskTotal(task))} 돌아옴`;$('#undoToast').classList.add('on');clearTimeout(undoTimer);undoTimer=setTimeout(()=>{$('#undoToast').classList.remove('on');lastCancelled=null},8000)}
 function adjustTask(index,delta){let task=state.tasks[index];if(!task)return;let before=task.min;task.min=Math.max(10,Math.min(720,before+delta));if(task.min===before)return;recordEvent(task.min>before?'extended':'shortened',task,{delta:task.min-before,minutes:task.min});save();renderAll();if(navigator.vibrate)navigator.vibrate(12)}
 syncHeader();
-$('#sleepAt').onchange=e=>{state.sleepAt=e.target.value;save();renderToday()};$('#sleepHours').onchange=e=>{state.sleep=+e.target.value;save();renderAll()};
+$('#sleepAt').onchange=e=>{state.sleepAt=e.target.value;save();renderAll()};$('#sleepHours').onchange=e=>{state.sleep=+e.target.value;save();renderAll()};
 function renderQuick(){if(!quickDraft)return;$('#quickTitle').textContent=quickDraft.name;$('#quickActivity').textContent=minsText(quickDraft.activity);$('#quickPrep').textContent=minsText(quickDraft.prep);$('#quickTravel').textContent=minsText(quickDraft.travel)}
 $('#quick').onclick=e=>{let b=e.target.closest('[data-preset]');if(!b)return;quickDraft={...PRESETS[b.dataset.preset]};renderQuick();$('#quickSheet').classList.add('on')};
 $$('[data-adjust]').forEach(button=>button.onclick=()=>{let[field,delta]=button.dataset.adjust.split(',');quickDraft[field]=Math.max(field==='activity'?10:0,quickDraft[field]+Number(delta));renderQuick()});
@@ -82,9 +89,9 @@ function displayTime(t){let[h,m]=t.split(':').map(Number);return`${h<12?'오전'
 function schedule(){let time=wakeTime();return state.tasks.map(t=>{let start=t.start||time,x={...t,start,activityStart:plus(start,(t.prepMin||0)+Math.floor((t.travelMin||0)/2)),end:plus(start,taskTotal(t))};time=x.end;return x})}
 function moveTask(from,to){if(from===to||to<0||to>=state.tasks.length)return;let [item]=state.tasks.splice(from,1);state.tasks.splice(to,0,item);save();renderAll()}
 function bindTodayEditing(){
-  $$('.timeedit').forEach(input=>input.onchange=()=>{let i=+input.dataset.timeIndex;state.tasks[i].start=input.value||null;save();renderToday()});
+  $$('.timeedit').forEach(input=>input.onchange=()=>{let i=+input.dataset.timeIndex;state.tasks[i].start=input.value||null;save();renderAll()});
   $$('[data-move-task]').forEach(button=>button.onclick=()=>moveTask(+button.dataset.moveTask,+button.dataset.to));
-  $$('[data-auto-time]').forEach(button=>button.onclick=()=>{delete state.tasks[+button.dataset.autoTime].start;save();renderToday()});
+  $$('[data-auto-time]').forEach(button=>button.onclick=()=>{delete state.tasks[+button.dataset.autoTime].start;save();renderAll()});
   $$('.draghandle').forEach(handle=>{
     let timer=null,active=false,target=+handle.dataset.dragIndex,startX=0,startY=0;
     const clear=()=>{if(timer)clearTimeout(timer);timer=null};
@@ -137,5 +144,5 @@ $('#exportData').onclick=()=>{save();feedback=$('#feedbackNote').value.trim();lo
 $('#importData').onclick=()=>{$('#importFile').value='';$('#importFile').click()};
 $('#importFile').onchange=async e=>{let file=e.target.files?.[0];if(!file)return;try{let data=JSON.parse(await file.text()),validation=Core.validateBackup(data);if(!validation.ok)throw new Error(validation.reason);if(!confirm('백업 기록을 현재 기기의 기록과 합칠까요? 같은 날짜는 백업 기록으로 바뀝니다.'))return;let merged=Core.mergeBackups({calendar,meta,feedback},data);calendar=merged.calendar;meta=merged.meta;feedback=merged.feedback;localStorage.setItem(CALKEY,JSON.stringify(calendar));saveMeta();localStorage.setItem(FEEDBACKKEY,feedback);state=calendar[keyDate()]||fresh();calendar[state.date]=state;calendarMonth=stateDate();save();renderAll();$('#feedbackNote').value=feedback;alert('백업 기록을 가져왔습니다.')}catch{alert('오늘 15시간에서 만든 JSON 백업 파일인지 확인해주세요.')}};
 $('#shareApp').onclick=async()=>{let share={title:'오늘 15시간',text:'24시간에서 수면·준비·이동·활동을 하나씩 떼어놓는 계획 앱',url:'https://tq6q6v5qpn-alt.github.io/today-15-hours/'};try{if(navigator.share)await navigator.share(share);else{await navigator.clipboard.writeText(share.url);alert('앱 주소를 복사했습니다.')}}catch(error){if(error.name!=='AbortError')alert('공유하지 못했습니다. 앱 주소를 직접 복사해주세요.')}};
-if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});renderAll();
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});renderAll();setInterval(()=>renderDayMap(),30000);
 })();

@@ -10,7 +10,7 @@
   <meta name="description" content="24시간에서 중요한 시간을 하나씩 떼어내는 학생용 하루 설계 앱">
   <link rel="manifest" href="manifest.webmanifest">
   <title>오늘 15시간</title>
-  <link rel="stylesheet" href="styles.css?v=10">
+  <link rel="stylesheet" href="styles.css?v=11">
 </head>
 <body><div class="app">
   <header class="top"><div class="toprow"><div><div class="brand">오늘 15시간</div><div class="date" id="date"></div></div><div class="topright"><div class="remain"><strong id="remainTop">15시간</strong><small>아직 주인이 없는 시간</small></div><button class="data-button" id="openData" aria-label="데이터와 공유">•••</button></div></div><div class="budgetbar"><div class="budgetfill" id="budgetFill"></div></div></header>
@@ -47,6 +47,6 @@
 <div class="sheetbg" id="dataSheet"><div class="sheet"><div class="handle"></div><h2>데이터와 테스트</h2><p class="sheetlead">기록은 이 기기에만 있습니다. 가끔 파일로 백업해두면 네이티브 앱으로도 가져갈 수 있습니다.</p><div class="data-actions"><button class="btn primary" id="exportData">전체 기록 백업</button><button class="btn outline" id="importData">백업 파일 가져오기</button><input id="importFile" type="file" accept="application/json,.json" hidden><button class="btn soft" id="shareApp">가족·지인에게 앱 링크 보내기</button></div><div class="feedback-box"><label for="feedbackNote">시험 사용 중 불편했던 점</label><div class="choice-help">자유롭게 적어두면 백업 파일에 함께 들어갑니다.</div><textarea id="feedbackNote" maxlength="2000" placeholder="예: 수영 준비 시작 버튼을 자주 잊음"></textarea><button class="btn outline" id="saveFeedback">메모 저장</button></div><div class="notice">가져오기는 백업에 있는 날짜를 현재 기록과 합칩니다. 같은 날짜가 있으면 가져온 기록으로 바뀝니다.</div><div class="actions"><button class="btn outline" id="closeData">닫기</button></div></div></div>
 <div class="undo-toast" id="undoToast" role="status" aria-live="polite"><span id="undoText"></span><button id="undoCancel">되돌리기</button></div>
 <script>window.addEventListener('error',function(e){document.documentElement.setAttribute('data-app-error',(e.message||'error')+' @ '+(e.filename||'')+':'+(e.lineno||0));});</script>
-<script src="core.js?v=10"></script>
-<script src="app.js?v=10"></script>
+<script src="core.js?v=11"></script>
+<script src="app.js?v=11"></script>
 </body></html>
