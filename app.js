@@ -4,7 +4,7 @@ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],KEY
 const keyDate=Core.keyDate,taskTotal=Core.taskTotal,plus=Core.plus,diffMinutes=Core.diffMinutes,actualParts=Core.actualParts;
 const PRESETS={swim:{name:'수영',activity:60,prep:20,travel:60},read:{name:'독서',activity:60,prep:10,travel:0},media:{name:'게임·만화·영화',activity:120,prep:0,travel:0},cook:{name:'요리',activity:90,prep:20,travel:0},bass:{name:'베이스',activity:60,prep:20,travel:60},band:{name:'밴드 활동',activity:180,prep:30,travel:60}};
 const TRACK_STAGES=[['prep','준비 시작'],['depart','출발'],['arrive','도착'],['start','활동 시작'],['end','활동 끝'],['return','귀가·다음 장소 도착']];
-let calendar=loadCalendar(),state=load(),meta=loadMeta(),feedback=localStorage.getItem(FEEDBACKKEY)||'',editing=null,tracking=null,quickDraft=null,alerts=[],calendarMonth=null,suddenMinutes=30,lastCancelled=null,undoTimer=null;
+let calendar=loadCalendar(),state=load(),meta=loadMeta(),feedback=localStorage.getItem(FEEDBACKKEY)||'',editing=null,tracking=null,quickDraft=null,alerts=[],calendarMonth=null,suddenMinutes=30,lastCancelled=null,undoTimer=null,dayGridCount=Number(localStorage.getItem('today15_grid_v1'))||48;
 function fresh(date=keyDate()){return{date,sleep:9,sleepAt:'23:30',tasks:[],events:[],start:'08:30',choice:''}}
 function loadCalendar(){try{let all=JSON.parse(localStorage.getItem(CALKEY)||'{}'),old=JSON.parse(localStorage.getItem(KEY)||'null');if(old?.date&&!all[old.date])all[old.date]=old;localStorage.setItem(CALKEY,JSON.stringify(all));return all}catch{return{}}}
 function load(){let today=keyDate();return calendar[today]||fresh(today)}
@@ -19,8 +19,43 @@ function planned(){return Core.planned(state.tasks)}
 function available(){return Core.available(state.sleep)}
 function remaining(){return Core.remaining(state)}
 function updateBudget(){let r=remaining(),pct=Math.max(0,Math.min(100,r/available()*100));$('#remainTop').textContent=minsText(r);$('#remainCard').textContent=minsText(r);$('#budgetFill').style.width=pct+'%';$('#budgetFill').style.background=r<0?'var(--red)':r<120?'var(--orange)':'var(--green)';$('#sleepLabel').textContent=`${minsText(state.sleep*60)} 보호`;$('#overmsg').classList.toggle('on',r<0)}
+function renderDayMap(){
+  const colors=['#2f8065','#cb7a3a','#537ba3','#7b64a8','#bc5965','#6e8741','#9b6b42'];
+  const sleepMin=Math.round(state.sleep*60),named=planned(),left=remaining();
+  const segments=[];let cursor=0;
+  const addSegment=(minutes,color,label)=>{
+    const start=cursor,end=cursor+Math.max(0,minutes);
+    segments.push({start,end,color,label});cursor=end;
+  };
+  addSegment(sleepMin,'#263d55','수면');
+  state.tasks.forEach((task,index)=>addSegment(taskTotal(task),colors[index%colors.length],task.name));
+  if(cursor<1440)addSegment(1440-cursor,'#e7e5dd','열린 시간');
+  const cellMinutes=1440/dayGridCount;
+  const cellColor=(start,end)=>{
+    const pieces=segments.map(segment=>{
+      const from=Math.max(start,segment.start),to=Math.min(end,segment.end);
+      return to>from?{color:segment.color,size:to-from}:null;
+    }).filter(Boolean);
+    if(!pieces.length)return'#9b3e35';
+    if(pieces.length===1)return pieces[0].color;
+    let used=0,parts=[];
+    pieces.forEach(piece=>{const from=used/(end-start)*100;used+=piece.size;const to=used/(end-start)*100;parts.push(`${piece.color} ${from}% ${to}%`)});
+    return`linear-gradient(90deg,${parts.join(',')})`;
+  };
+  const cells=Array.from({length:dayGridCount},(_,index)=>{
+    const start=index*cellMinutes,end=start+cellMinutes;
+    return`<i style="background:${cellColor(start,end)}" aria-hidden="true"></i>`;
+  }).join('');
+  const taskRows=state.tasks.map((task,index)=>{
+    const total=taskTotal(task),width=Math.max(1,Math.min(100,total/1440*100));
+    return `<div class="allocation-row"><div class="allocation-name"><span style="background:${colors[index%colors.length]}"></span><b>${esc(task.name)}</b><time>${minsText(total)}</time></div><div class="allocation-track"><i style="width:${width}%;background:${colors[index%colors.length]}"></i></div></div>`;
+  }).join('');
+  const unit=dayGridCount===24?'1시간':dayGridCount===48?'30분':'1분';
+  $('#dayMap').innerHTML=`<div class="grid-switch" aria-label="시간 격자 단위"><button data-grid-count="24" class="${dayGridCount===24?'on':''}">24칸</button><button data-grid-count="48" class="${dayGridCount===48?'on':''}">48칸</button><button data-grid-count="1440" class="${dayGridCount===1440?'on':''}">1분 × 1,440</button></div><div class="time-cube-board cubes-${dayGridCount} ${left<0?'over':''}" role="img" aria-label="24시간 격자. 한 칸 ${unit}. 수면 ${minsText(sleepMin)}, 이름 붙인 시간 ${minsText(named)}, 남은 시간 ${minsText(left)}">${cells}</div><div class="cube-caption"><b>1칸 = ${unit}</b><span>전체 ${dayGridCount.toLocaleString('ko-KR')}칸은 언제나 24시간</span></div><div class="day-numbers cube-numbers"><div><small>수면</small><strong>${minsText(sleepMin)}</strong></div><div><small>이름 붙인 시간</small><strong>${minsText(named)}</strong></div><div class="${left<0?'negative':''}"><small>아직 열린 시간</small><strong>${minsText(left)}</strong></div></div>${taskRows?`<div class="allocation-list">${taskRows}</div>`:'<div class="day-empty">아직 열린 칸뿐입니다.<br>시간을 놓을 때마다 실제 크기만큼 색이 들어옵니다.</div>'}<p class="day-principle">칸을 모두 채우는 것이 목표는 아닙니다. 작은 칸에도 의도를 주고 실제로 살아내는 것이 시간의 밀도를 높입니다.</p>`;
+  $$('[data-grid-count]').forEach(button=>button.onclick=()=>{dayGridCount=+button.dataset.gridCount;localStorage.setItem('today15_grid_v1',String(dayGridCount));renderDayMap()});
+}
 function renderTasks(){let box=$('#taskList');box.innerHTML=state.tasks.length?state.tasks.map((t,i)=>`<button class="task ${remaining()<0?'over':''}" data-focus="${i}"><div class="tasktop"><span class="dot"></span><b>${esc(t.name)}</b>${t.origin==='sudden'?'<span class="live-badge">지금 생김</span>':''}</div>${t.focus?.question?`<p>${esc(t.focus.question)}</p>`:'<p>눌러서 시작과 끝을 선명하게 만들기</p>'}<div class="taskbreak"><span>활동 ${minsText(t.min)}</span>${t.prepMin?`<span>준비 ${minsText(t.prepMin)}</span>`:''}${t.travelMin?`<span>이동 ${minsText(t.travelMin)}</span>`:''}<span>전체 ${minsText(taskTotal(t))}</span></div><span class="del" data-del="${i}">×</span></button>`).join(''):'<div class="empty">아직 떼어놓은 시간이 없습니다.<br>위의 빠른 버튼부터 눌러보세요.</div>';$$('[data-del]').forEach(b=>b.onclick=e=>{e.stopPropagation();cancelTask(+b.dataset.del)});$$('[data-focus]').forEach(b=>b.onclick=()=>openFocus(+b.dataset.focus))}
-function renderAll(){syncHeader();updateBudget();renderTasks();renderToday();renderFocus();renderCalendar()}
+function renderAll(){syncHeader();updateBudget();renderDayMap();renderTasks();renderToday();renderFocus();renderCalendar()}
 function addTask(name,min,prepMin=0,travelMin=0,origin='planned'){if(!name)return;let task={id:Date.now()+Math.random(),name,min,prepMin,travelMin,origin,focus:null,logs:{}};state.tasks.push(task);if(origin==='sudden')recordEvent('added',task,{minutes:min});save();renderAll();return task}
 function recordEvent(type,task,detail={}){state.events=Array.isArray(state.events)?state.events:[];state.events.push({id:String(Date.now()+Math.random()),type,taskId:task.id,name:task.name,at:new Date().toISOString(),...detail})}
 function cancelTask(index){let task=state.tasks[index];if(!task)return;lastCancelled={task,index};state.tasks.splice(index,1);recordEvent('cancelled',task,{minutes:taskTotal(task)});save();renderAll();$('#undoText').textContent=`${task.name} 취소 · ${minsText(taskTotal(task))} 돌아옴`;$('#undoToast').classList.add('on');clearTimeout(undoTimer);undoTimer=setTimeout(()=>{$('#undoToast').classList.remove('on');lastCancelled=null},8000)}
