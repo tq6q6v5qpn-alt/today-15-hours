@@ -1,10 +1,10 @@
 (()=>{'use strict';
 const Core=window.Today15Core;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],KEY='today15hours_v2',CALKEY='today15_calendar_v3',METAKEY='today15_meta_v4',FEEDBACKKEY='today15_feedback_v1',SCHEMA=1;
+const keyDate=Core.keyDate,taskTotal=Core.taskTotal,plus=Core.plus,diffMinutes=Core.diffMinutes,actualParts=Core.actualParts;
 const PRESETS={swim:{name:'수영',activity:60,prep:20,travel:60},read:{name:'독서',activity:60,prep:10,travel:0},media:{name:'게임·만화·영화',activity:120,prep:0,travel:0},cook:{name:'요리',activity:90,prep:20,travel:0},bass:{name:'베이스',activity:60,prep:20,travel:60},band:{name:'밴드 활동',activity:180,prep:30,travel:60}};
 const TRACK_STAGES=[['prep','준비 시작'],['depart','출발'],['arrive','도착'],['start','활동 시작'],['end','활동 끝'],['return','귀가·다음 장소 도착']];
 let calendar=loadCalendar(),state=load(),meta=loadMeta(),feedback=localStorage.getItem(FEEDBACKKEY)||'',editing=null,tracking=null,quickDraft=null,alerts=[],calendarMonth=null,suddenMinutes=30,lastCancelled=null,undoTimer=null;
-const keyDate=Core.keyDate,taskTotal=Core.taskTotal,plus=Core.plus,diffMinutes=Core.diffMinutes,actualParts=Core.actualParts;
 function fresh(date=keyDate()){return{date,sleep:9,sleepAt:'23:30',tasks:[],events:[],start:'08:30',choice:''}}
 function loadCalendar(){try{let all=JSON.parse(localStorage.getItem(CALKEY)||'{}'),old=JSON.parse(localStorage.getItem(KEY)||'null');if(old?.date&&!all[old.date])all[old.date]=old;localStorage.setItem(CALKEY,JSON.stringify(all));return all}catch{return{}}}
 function load(){let today=keyDate();return calendar[today]||fresh(today)}
