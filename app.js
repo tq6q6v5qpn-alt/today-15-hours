@@ -143,5 +143,10 @@ $('#exportData').onclick=()=>{save();feedback=$('#feedbackNote').value.trim();lo
 $('#importData').onclick=()=>{$('#importFile').value='';$('#importFile').click()};
 $('#importFile').onchange=async e=>{let file=e.target.files?.[0];if(!file)return;try{let data=JSON.parse(await file.text()),validation=Core.validateBackup(data);if(!validation.ok)throw new Error(validation.reason);if(!confirm('백업 기록을 현재 기기의 기록과 합칠까요? 같은 날짜는 백업 기록으로 바뀝니다.'))return;let merged=Core.mergeBackups({calendar,meta,feedback},data);calendar=merged.calendar;meta=merged.meta;feedback=merged.feedback;localStorage.setItem(CALKEY,JSON.stringify(calendar));saveMeta();localStorage.setItem(FEEDBACKKEY,feedback);state=calendar[keyDate()]||fresh();calendar[state.date]=state;calendarMonth=stateDate();save();renderAll();$('#feedbackNote').value=feedback;alert('백업 기록을 가져왔습니다.')}catch{alert('오늘 15시간에서 만든 JSON 백업 파일인지 확인해주세요.')}};
 $('#shareApp').onclick=async()=>{let share={title:'오늘 15시간',text:'24시간에서 수면·준비·이동·활동을 하나씩 떼어놓는 계획 앱',url:'https://tq6q6v5qpn-alt.github.io/today-15-hours/'};try{if(navigator.share)await navigator.share(share);else{await navigator.clipboard.writeText(share.url);alert('앱 주소를 복사했습니다.')}}catch(error){if(error.name!=='AbortError')alert('공유하지 못했습니다. 앱 주소를 직접 복사해주세요.')}};
-if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});renderAll();setInterval(()=>renderDayMap(),30000);
+if('serviceWorker'in navigator&&location.protocol.startsWith('http')){
+  let refreshing=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(refreshing)return;refreshing=true;location.reload()});
+  navigator.serviceWorker.register('./sw.js').then(registration=>registration.update()).catch(()=>{});
+}
+renderAll();setInterval(()=>renderDayMap(),30000);
 })();
