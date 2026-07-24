@@ -4,7 +4,7 @@ const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],KEY
 const keyDate=Core.keyDate,taskTotal=Core.taskTotal,plus=Core.plus,diffMinutes=Core.diffMinutes,actualParts=Core.actualParts;
 const PRESETS={swim:{name:'수영',activity:60,prep:20,travel:60},read:{name:'독서',activity:60,prep:10,travel:0},media:{name:'게임·만화·영화',activity:120,prep:0,travel:0},cook:{name:'요리',activity:90,prep:20,travel:0},bass:{name:'베이스',activity:60,prep:20,travel:60},band:{name:'밴드 활동',activity:180,prep:30,travel:60}};
 const TRACK_STAGES=[['prep','준비 시작'],['depart','출발'],['arrive','도착'],['start','활동 시작'],['end','활동 끝'],['return','귀가·다음 장소 도착']];
-let calendar=loadCalendar(),state=load(),meta=loadMeta(),feedback=localStorage.getItem(FEEDBACKKEY)||'',editing=null,tracking=null,quickDraft=null,alerts=[],calendarMonth=null,suddenMinutes=30,lastCancelled=null,undoTimer=null,dayGridCount=Number(localStorage.getItem('today15_grid_v1'))||48;
+let calendar=loadCalendar(),state=load(),meta=loadMeta(),feedback=localStorage.getItem(FEEDBACKKEY)||'',editing=null,tracking=null,quickDraft=null,cubeDraft=null,alerts=[],calendarMonth=null,suddenMinutes=30,lastCancelled=null,undoTimer=null,dayGridCount=Number(localStorage.getItem('today15_grid_v1'))||48;
 function fresh(date=keyDate()){return{date,sleep:9,sleepAt:'23:30',tasks:[],events:[],start:'08:30',choice:''}}
 function loadCalendar(){try{let all=JSON.parse(localStorage.getItem(CALKEY)||'{}'),old=JSON.parse(localStorage.getItem(KEY)||'null');if(old?.date&&!all[old.date])all[old.date]=old;localStorage.setItem(CALKEY,JSON.stringify(all));return all}catch{return{}}}
 function load(){let today=keyDate(),day=calendar[today]||fresh(today);day.sleep=9;day.sleepAt=day.sleepAt||'23:30';return day}
@@ -22,19 +22,23 @@ function updateBudget(){let r=remaining(),pct=Math.max(0,Math.min(100,r/availabl
 function renderDayMap(){
   const colors=['#2f8065','#cb7a3a','#537ba3','#7b64a8','#bc5965','#6e8741','#9b6b42'];
   const sleepMin=Math.round(state.sleep*60),named=planned(),left=remaining(),rows=schedule();
-  const minuteColors=Array(1440).fill('#e7e5dd');
+  const openColor='#e7e5dd',minuteColors=Array(1440).fill(openColor);
   const toMinute=time=>{const[h,m]=time.split(':').map(Number);return h*60+m};
   const paint=(start,duration,color)=>{
     for(let offset=0;offset<Math.min(1440,Math.max(0,duration));offset++)minuteColors[(start+offset)%1440]=color;
   };
   paint(toMinute(state.sleepAt),sleepMin,'#263d55');
   rows.forEach((task,index)=>paint(toMinute(task.start),taskTotal(task),colors[index%colors.length]));
-  const now=new Date(),today=state.date===keyDate(),nowMinute=now.getHours()*60+now.getMinutes(),preciseMinute=nowMinute+now.getSeconds()/60;
+  const now=new Date(),todayKey=keyDate(),today=state.date===todayKey,pastDay=state.date<todayKey,nowMinute=now.getHours()*60+now.getMinutes(),preciseMinute=nowMinute+now.getSeconds()/60;
+  const statusColors=minuteColors.map((color,minute)=>{
+    if(pastDay||(today&&minute<preciseMinute))return'#a9635d';
+    return color===openColor?'#e8c968':'#5d9278';
+  });
   const cellMinutes=1440/dayGridCount;
   const cellColor=(start,end)=>{
     const first=Math.floor(start),last=Math.ceil(end),runs=[];
     for(let minute=first;minute<last;minute++){
-      const color=minuteColors[Math.min(1439,minute)];
+      const color=statusColors[Math.min(1439,minute)];
       if(runs.at(-1)?.color===color)runs.at(-1).size+=1;
       else runs.push({color,size:1});
     }
@@ -49,7 +53,9 @@ function renderDayMap(){
     const elapsed=today&&end<=preciseMinute;
     const progress=current?Math.max(0,Math.min(100,(preciseMinute-start)/(end-start)*100)):0;
     const title=`${plus('00:00',start)}~${plus('00:00',end%1440)}`;
-    return`<i class="${elapsed?'elapsed ':''}${current?'current':''}" style="background:${cellColor(start,end)};--elapsed:${progress}%" title="${title}" aria-hidden="true"></i>`;
+    const label=dayGridCount===24?String(Math.floor(start/60)).padStart(2,'0'):dayGridCount===48&&index%2===0?String(Math.floor(start/60)).padStart(2,'0'):dayGridCount===48?'·':'';
+    const hourStart=dayGridCount===1440&&index%60===0;
+    return`<button type="button" class="cube ${elapsed?'elapsed ':''}${current?'current ':''}${hourStart?'hour-start':''}" style="background:${cellColor(start,end)};--elapsed:${progress}%" data-cube-start="${start}" data-cube-duration="${cellMinutes}" data-hour="${hourStart?String(Math.floor(start/60)).padStart(2,'0'):''}" aria-label="${title} 계획하기"><span>${label}</span></button>`;
   }).join('');
   const taskRows=state.tasks.map((task,index)=>{
     const total=taskTotal(task),width=Math.max(1,Math.min(100,total/1440*100)),row=rows[index];
@@ -58,12 +64,19 @@ function renderDayMap(){
   const unit=dayGridCount===24?'1시간':dayGridCount===48?'30분':'1분';
   const active=rows.find(task=>{const delta=(nowMinute-toMinute(task.start)+1440)%1440;return delta<taskTotal(task)});
   const nowBlock=today?`<div class="now-coordinate"><div><small>지금 여기</small><strong>${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}</strong></div><div><b>오늘의 ${(nowMinute+1).toLocaleString('ko-KR')}번째 분</b><span>${active?esc(active.name):'아직 열린 시간'} · 자정까지 ${minsText(1440-nowMinute)}</span></div></div>`:`<div class="viewing-date">선택한 날짜의 00:00부터 23:59까지</div>`;
-  $('#dayMap').innerHTML=`<div class="grid-switch" aria-label="시간 격자 단위"><button data-grid-count="24" class="${dayGridCount===24?'on':''}">24칸</button><button data-grid-count="48" class="${dayGridCount===48?'on':''}">48칸</button><button data-grid-count="1440" class="${dayGridCount===1440?'on':''}">1분 × 1,440</button></div>${nowBlock}<div class="time-axis"><span>00:00</span><span>12:00</span><span>23:59</span></div><div class="time-cube-board cubes-${dayGridCount} ${left<0?'over':''}" role="img" aria-label="00시부터 23시 59분까지의 24시간 격자. 한 칸 ${unit}. 수면 ${minsText(sleepMin)}, 이름 붙인 시간 ${minsText(named)}, 남은 시간 ${minsText(left)}">${cells}</div><div class="cube-caption"><b>1칸 = ${unit}</b><span>왼쪽 위에서 오른쪽 아래로 시간이 흐릅니다</span></div><div class="cube-insight"><small>오늘의 바닥 단위</small><strong>평범한 하루 안에 실제로<br><em>1,440개의 작은 선택지</em>가 있었다는 사실.</strong></div><div class="day-numbers cube-numbers"><div><small>수면</small><strong>${minsText(sleepMin)}</strong></div><div><small>이름 붙인 시간</small><strong>${minsText(named)}</strong></div><div class="${left<0?'negative':''}"><small>아직 열린 시간</small><strong>${minsText(left)}</strong></div></div>${taskRows?`<div class="allocation-list">${taskRows}</div>`:'<div class="day-empty">아직 열린 칸뿐입니다.<br>시간을 놓을 때마다 실제 시각 위치에 색이 들어옵니다.</div>'}<p class="day-principle">어두워진 칸은 실패가 아니라 이미 지나온 좌표입니다. 밝은 칸은 지금부터 선택할 수 있는 자리입니다.</p>`;
+  $('#dayMap').innerHTML=`<div class="grid-switch" aria-label="시간 격자 단위"><button data-grid-count="24" class="${dayGridCount===24?'on':''}">24칸</button><button data-grid-count="48" class="${dayGridCount===48?'on':''}">48칸</button><button data-grid-count="1440" class="${dayGridCount===1440?'on':''}">1분 × 1,440</button></div>${nowBlock}<div class="cube-legend"><span class="past">지남</span><span class="planned">계획</span><span class="open">열림</span></div><div class="time-axis"><span>00시</span><span>06시</span><span>12시</span><span>18시</span><span>24시</span></div><div class="time-cube-board cubes-${dayGridCount} ${left<0?'over':''}" role="group" aria-label="00시부터 23시 59분까지의 24시간 격자. 한 칸 ${unit}. 수면 ${minsText(sleepMin)}, 이름 붙인 시간 ${minsText(named)}, 남은 시간 ${minsText(left)}">${cells}</div><div class="cube-caption"><b>1칸 = ${unit}</b><span>큐브를 누르면 그 시각에 계획을 놓습니다</span></div><div class="cube-insight"><small>오늘의 바닥 단위</small><strong>평범한 하루 안에 실제로<br><em>1,440개의 작은 선택지</em>가 있었다는 사실.</strong></div><div class="day-numbers cube-numbers"><div><small>수면</small><strong>${minsText(sleepMin)}</strong></div><div><small>이름 붙인 시간</small><strong>${minsText(named)}</strong></div><div class="${left<0?'negative':''}"><small>아직 열린 시간</small><strong>${minsText(left)}</strong></div></div>${taskRows?`<div class="allocation-list">${taskRows}</div>`:'<div class="day-empty">노란 큐브를 눌러 계획을 놓아보세요.<br>저장하면 그 시간이 초록색으로 바뀝니다.</div>'}<p class="day-principle">빨강은 지나온 좌표, 초록은 정한 시간, 노랑은 아직 선택할 수 있는 자리입니다.</p>`;
   $$('[data-grid-count]').forEach(button=>button.onclick=()=>{dayGridCount=+button.dataset.gridCount;localStorage.setItem('today15_grid_v1',String(dayGridCount));renderDayMap()});
+  $('.time-cube-board').onclick=event=>{
+    const cube=event.target.closest('[data-cube-start]');if(!cube)return;
+    const start=+cube.dataset.cubeStart,duration=+cube.dataset.cubeDuration,end=start+duration;
+    if(pastDay||(today&&end<=preciseMinute)){alert('이미 지나온 큐브입니다. 노란색이나 초록색 큐브를 선택해주세요.');return}
+    const chosenStart=today&&start<preciseMinute?Math.ceil(preciseMinute):start;
+    openCubePlan(chosenStart,Math.max(1,end-chosenStart));
+  };
 }
 function renderTasks(){let box=$('#taskList');box.innerHTML=state.tasks.length?state.tasks.map((t,i)=>`<button class="task ${remaining()<0?'over':''}" data-focus="${i}"><div class="tasktop"><span class="dot"></span><b>${esc(t.name)}</b>${t.origin==='sudden'?'<span class="live-badge">지금 생김</span>':''}</div>${t.focus?.question?`<p>${esc(t.focus.question)}</p>`:'<p>눌러서 시작과 끝을 선명하게 만들기</p>'}<div class="taskbreak"><span>활동 ${minsText(t.min)}</span>${t.prepMin?`<span>준비 ${minsText(t.prepMin)}</span>`:''}${t.travelMin?`<span>이동 ${minsText(t.travelMin)}</span>`:''}<span>전체 ${minsText(taskTotal(t))}</span></div><span class="del" data-del="${i}">×</span></button>`).join(''):'<div class="empty">아직 떼어놓은 시간이 없습니다.<br>위의 빠른 버튼부터 눌러보세요.</div>';$$('[data-del]').forEach(b=>b.onclick=e=>{e.stopPropagation();cancelTask(+b.dataset.del)});$$('[data-focus]').forEach(b=>b.onclick=()=>openFocus(+b.dataset.focus))}
 function renderAll(){syncHeader();updateBudget();renderDayMap();renderTasks();renderToday();renderFocus();renderCalendar()}
-function addTask(name,min,prepMin=0,travelMin=0,origin='planned'){if(!name)return;let task={id:Date.now()+Math.random(),name,min,prepMin,travelMin,origin,focus:null,logs:{}};state.tasks.push(task);if(origin==='sudden')recordEvent('added',task,{minutes:min});save();renderAll();return task}
+function addTask(name,min,prepMin=0,travelMin=0,origin='planned',start=null){if(!name)return;let task={id:Date.now()+Math.random(),name,min,prepMin,travelMin,origin,focus:null,logs:{}};if(start)task.start=start;state.tasks.push(task);if(origin==='sudden')recordEvent('added',task,{minutes:min});save();renderAll();return task}
 function recordEvent(type,task,detail={}){state.events=Array.isArray(state.events)?state.events:[];state.events.push({id:String(Date.now()+Math.random()),type,taskId:task.id,name:task.name,at:new Date().toISOString(),...detail})}
 function cancelTask(index){let task=state.tasks[index];if(!task)return;lastCancelled={task,index};state.tasks.splice(index,1);recordEvent('cancelled',task,{minutes:taskTotal(task)});save();renderAll();$('#undoText').textContent=`${task.name} 취소 · ${minsText(taskTotal(task))} 돌아옴`;$('#undoToast').classList.add('on');clearTimeout(undoTimer);undoTimer=setTimeout(()=>{$('#undoToast').classList.remove('on');lastCancelled=null},8000)}
 function adjustTask(index,delta){let task=state.tasks[index];if(!task)return;let before=task.min;task.min=Math.max(10,Math.min(720,before+delta));if(task.min===before)return;recordEvent(task.min>before?'extended':'shortened',task,{delta:task.min-before,minutes:task.min});save();renderAll();if(navigator.vibrate)navigator.vibrate(12)}
@@ -78,7 +91,33 @@ $('#closeSudden').onclick=()=>$('#suddenSheet').classList.remove('on');$('#sudde
 $('#suddenPresets').onclick=e=>{let b=e.target.closest('[data-sudden]');if(!b)return;$$('[data-sudden]').forEach(x=>x.classList.toggle('on',x===b));$('#suddenName').value=b.dataset.sudden==='기타'?'':b.dataset.sudden;$('#suddenName').focus()};
 $('#suddenRange').oninput=e=>{suddenMinutes=+e.target.value;renderSudden()};
 $$('[data-sudden-adjust]').forEach(button=>button.onclick=()=>{suddenMinutes+=+button.dataset.suddenAdjust;renderSudden();if(navigator.vibrate)navigator.vibrate(10)});
-$('#addSudden').onclick=()=>{let name=$('#suddenName').value.trim();if(!name){$('#suddenName').focus();return}addTask(name,suddenMinutes,0,0,'sudden');$('#suddenSheet').classList.remove('on');showView('todayView')};
+$('#addSudden').onclick=()=>{let name=$('#suddenName').value.trim();if(!name){$('#suddenName').focus();return}let now=new Date(),start=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;addTask(name,suddenMinutes,0,0,'sudden',start);$('#suddenSheet').classList.remove('on');showView('todayView')};
+function renderCubePlan(){
+  if(!cubeDraft)return;
+  const start=plus('00:00',cubeDraft.start),end=plus(start,cubeDraft.duration);
+  $('#cubePlanTime').textContent=`${start}~${end}`;
+  $('#cubePlanDuration').textContent=minsText(cubeDraft.duration);
+}
+function openCubePlan(start,duration){
+  cubeDraft={start,duration:Math.max(1,Math.round(duration))};
+  $('#cubePlanName').value='';
+  $$('[data-cube-name]').forEach(button=>button.classList.remove('on'));
+  renderCubePlan();
+  $('#cubePlanSheet').classList.add('on');
+}
+$('#cubePlanPresets').onclick=event=>{
+  const button=event.target.closest('[data-cube-name]');if(!button)return;
+  $('#cubePlanName').value=button.dataset.cubeName;
+  $$('[data-cube-name]').forEach(item=>item.classList.toggle('on',item===button));
+};
+$$('[data-cube-adjust]').forEach(button=>button.onclick=()=>{cubeDraft.duration=Math.max(1,Math.min(720,cubeDraft.duration+Number(button.dataset.cubeAdjust)));renderCubePlan()});
+$('#saveCubePlan').onclick=()=>{
+  const name=$('#cubePlanName').value.trim();if(!name){$('#cubePlanName').focus();return}
+  addTask(name,cubeDraft.duration,0,0,'planned',plus('00:00',cubeDraft.start));
+  $('#cubePlanSheet').classList.remove('on');
+};
+$('#closeCubePlan').onclick=()=>$('#cubePlanSheet').classList.remove('on');
+$('#cubePlanSheet').onclick=event=>{if(event.target===$('#cubePlanSheet'))$('#cubePlanSheet').classList.remove('on')};
 $('#undoCancel').onclick=()=>{if(!lastCancelled)return;state.tasks.splice(Math.min(lastCancelled.index,state.tasks.length),0,lastCancelled.task);recordEvent('restored',lastCancelled.task,{minutes:taskTotal(lastCancelled.task)});lastCancelled=null;clearTimeout(undoTimer);$('#undoToast').classList.remove('on');save();renderAll()};
 $('#add').onclick=()=>{let n=$('#taskName').value.trim();if(!n){$('#taskName').focus();return}addTask(n,+$('input[name=dur]:checked').value,Math.max(0,+$('#directPrep').value||0),Math.max(0,+$('#directTravel').value||0));$('#taskName').value='';$('#directPrep').value=0;$('#directTravel').value=0};
 function openFocus(i){editing=i;let t=state.tasks[i];$('#sheetTitle').textContent=t.name;$('#focusQuestion').value=t.focus?.question||'';$('#firstMove').value=t.focus?.first||'';$('#finishLine').value=t.focus?.finish||'';$('#focusSheet').classList.add('on')}
