@@ -1,0 +1,6 @@
+PASS sleep_touch
+PASS duration_touch
+PASS actual_phases
+PASS mobile_touch
+PASS actual_plan_change
+Touch browser checks: 5 passed, 0 failed; verification-cloud/final-touch/touch-browser-results.json

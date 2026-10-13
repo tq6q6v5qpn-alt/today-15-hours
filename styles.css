@@ -36,12 +36,6 @@ body.is-home .data-button{width:44px;height:44px}
 .home-clock-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:8px}
 .home-text-button{min-height:44px;padding:9px 10px;border:0;border-radius:12px;background:transparent;color:#526057;font-size:13px;font-weight:750;line-height:1.45;overflow-wrap:anywhere}
 .home-text-button:active{background:#e6eae1}
-.home-sleep-settings{margin:0 0 18px;padding:18px;border:1px solid var(--line);border-radius:20px;background:var(--paper);text-align:left}
-.home-sleep-settings .sleepbox{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-.home-sleep-settings .field{min-width:0}
-.home-sleep-settings input{min-width:0;padding:12px 9px}
-.home-sleep-settings p{margin:0 0 12px;color:var(--muted);font-size:12px;line-height:1.65}
-.home-sleep-settings #homeSleepStatus{margin:10px 0 0}
 .home-start{min-height:60px;font-size:19px;border-radius:20px}
 .home-records-button{margin-top:11px;color:var(--ink)}
 .home-memories{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:3px 0 20px;line-height:1.5}
@@ -68,5 +62,92 @@ body.is-home .data-button{width:44px;height:44px}
 .home-new-activity input{min-width:0}
 .home-view button:focus-visible,.home-start-sheet button:focus-visible,.smallbrand:focus-visible{outline:3px solid var(--green);outline-offset:3px}
 body.is-home .undo-toast{bottom:calc(12px + var(--safe))}
-@media(max-width:350px){body.is-home .main{padding-inline:18px}.home-clock{padding-top:20px}.home-new-activity{grid-template-columns:1fr}.home-sleep-settings{padding:14px}.home-sleep-settings .sleepbox{grid-template-columns:1fr}.home-active-actions button{flex-basis:100%}}
+@media(max-width:350px){body.is-home .main{padding-inline:18px}.home-clock{padding-top:20px}.home-new-activity{grid-template-columns:1fr}.home-active-actions button{flex-basis:100%}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* Times open one shared editor; only the selected value has adjustment controls. */
+.home-time-title{margin:0;line-height:1.2}
+#homeTime{display:block;width:100%;min-height:68px;padding:4px 0;border:0;border-radius:16px;background:transparent;color:var(--green);text-align:center}
+#homeTime:active{background:#e6eae1}
+.time-touch,.clock-touch,.task-duration-touch{min-width:44px;min-height:44px;max-width:100%;padding:10px 12px;border:1px solid #c7d7c8;border-radius:13px;background:#edf2e9;color:var(--green);font-size:16px;font-weight:850;font-variant-numeric:tabular-nums;line-height:1.4;overflow-wrap:anywhere}
+.time-touch{width:100%}
+.time-touch:active,.clock-touch:active,.task-duration-touch:active{background:var(--green2)}
+.time-touch:focus-visible,.clock-touch:focus-visible,.task-duration-touch:focus-visible,.time-adjust-sheet button:focus-visible{outline:3px solid var(--green);outline-offset:3px}
+.sleep-touch{text-align:left;font-size:14px}
+.direct-time-touch{margin-top:8px}
+.durrow label{min-height:44px}
+.durrow input{display:block;position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.durrow input:focus-visible+label{outline:3px solid var(--green);outline-offset:3px}
+.prep-grid .field{min-width:0}
+.time-counter>.time-touch{display:block;width:100%;min-height:58px;margin:5px 0 13px;padding:4px 8px;border-color:#b9d6c5;background:#ffffff94;font-size:35px;letter-spacing:-.05em}
+.mini-counters>div>div>.time-touch{width:100%;min-width:0;height:auto;min-height:54px;padding:8px 4px;font-size:16px;line-height:1.4}
+.live-time>div>.time-touch{display:block;min-height:58px;margin:5px 0 9px;padding:4px 8px;font-size:35px;letter-spacing:-.05em}
+.cube-duration>.time-touch{display:block;min-height:54px;margin:4px 0 12px;padding:4px 8px;border-color:#dfcf97;font-size:28px;letter-spacing:-.04em}
+.clock-touch{width:auto;min-width:100px}
+.task-duration-touch{padding:8px 10px;font-size:13px}
+#timeAdjustSheet{z-index:60}
+.time-adjust-sheet{overscroll-behavior:contain}
+#timeAdjustFields{display:grid;gap:15px}
+.time-adjust-field{min-width:0;padding:14px;border:1px solid var(--line);border-radius:18px;background:#f2f4ef}
+.time-adjust-field label{margin-bottom:8px;font-size:14px;line-height:1.4}
+.time-adjust-field input[type=time],.time-adjust-field input[type=number],.time-adjust-value,.time-adjust-clock{display:block;width:100%;min-width:0;min-height:54px;padding:12px 10px;border-radius:13px;font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.3;text-align:center}
+.time-adjust-field input[type=time]{text-align:left}
+.time-adjust-field input[type=time]::-webkit-date-and-time-value{text-align:center}
+.time-adjust-stepper{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.time-adjust-stepper button{min-width:0;min-height:48px;padding:10px 8px;border:1px solid #c7d7c8;border-radius:13px;background:#fff;color:var(--ink);font-size:14px;font-weight:850;line-height:1.3}
+.time-adjust-stepper button:active{background:var(--green2)}
+.time-adjust-stepper button:disabled{opacity:.45}
+#timeAdjustPreview{margin:15px 0 0;padding:13px 14px;border-radius:14px;background:var(--green2);color:#315b46;font-size:14px;font-weight:750;line-height:1.6;overflow-wrap:anywhere}
+#timeAdjustPreview:empty{display:none}
+#timeAdjustError{margin:10px 0 0;color:var(--red);font-size:13px;font-weight:750;line-height:1.5;overflow-wrap:anywhere}
+#timeAdjustError:empty{display:none}
+@media(max-width:350px){.time-adjust-sheet{padding-inline:14px}.time-adjust-field{padding:12px}.time-adjust-field input[type=time],.time-adjust-field input[type=number]{font-size:20px}.time-counter div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* One next action keeps actual path recording easy to follow. */
+.track-next{display:block;width:100%;min-height:56px;margin:14px 0;padding:14px 16px;border:0;border-radius:16px;background:var(--green);color:#fff;font-size:17px;font-weight:900;line-height:1.45;overflow-wrap:anywhere;text-align:center}
+.track-next:disabled{opacity:.5;cursor:default}
+.track-next:focus-visible,.track-editor button:focus-visible,.track-edit button:focus-visible{outline:3px solid var(--green);outline-offset:3px}
+.track-progress{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:12px 0;font-size:12px;font-weight:800;line-height:1.5;color:var(--muted)}
+.track-progress>span{padding:7px 10px;border-radius:10px;background:#eef1ec}
+.track-progress .done{background:var(--green2);color:var(--green)}
+.track-progress .current{background:var(--navy2);color:var(--navy)}
+.track-summary{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}
+.track-summary>div{flex:1 1 100px;min-width:0;padding:12px 13px;border:1px solid var(--line);border-radius:15px;background:#f2f4ef}
+.track-summary small,.track-summary .summary-label{display:block;color:var(--muted);font-size:11px;font-weight:800;line-height:1.5}
+.track-summary strong{display:block;margin-top:4px;font-size:20px;font-weight:900;line-height:1.35;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.track-summary p{margin:7px 0 0;color:var(--muted);font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+.track-summary .actual{background:var(--green2);border-color:#c7d7c8}
+.track-summary .planned{background:var(--navy2);border-color:#d0dce9}
+.track-editor,.track-edit{margin:15px 0;padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.track-editor>summary,.track-edit>summary{min-height:44px;padding:11px 0;color:#526057;font-size:14px;font-weight:800;line-height:1.5;cursor:pointer}
+.track-editor .field,.track-edit .field{min-width:0;margin-top:12px}
+.track-editor input[type=datetime-local],.track-edit input[type=datetime-local]{display:block;width:100%;min-width:0;max-width:100%;min-height:54px;padding:12px 10px;font-size:16px;font-variant-numeric:tabular-nums}
+.track-editor input[type=datetime-local]::-webkit-date-and-time-value,.track-edit input[type=datetime-local]::-webkit-date-and-time-value{text-align:left}
+.track-editor .actions button,.track-edit .actions button{min-height:48px}
+.track-summary{align-items:center;line-height:1.5}
+.track-summary>b{font-size:17px;color:var(--ink)}
+#trackSkip{display:block;min-height:44px;max-width:100%;margin:0 auto;padding:10px 13px;border:1px solid var(--line);border-radius:13px;background:var(--paper);color:#526057;font-size:13px;font-weight:800;line-height:1.45;overflow-wrap:anywhere}
+#trackSkip:focus-visible,.track-detail>summary:focus-visible,.track-record:focus-visible{outline:3px solid var(--green);outline-offset:3px}
+.track-detail{margin:15px 0;border-top:1px solid var(--line)}
+.track-detail>summary{min-height:44px;padding:13px 0;color:#526057;font-size:14px;font-weight:800;line-height:1.5;cursor:pointer}
+.track-parts{display:grid;gap:8px;margin:8px 0 14px}
+.track-part{min-width:0;padding:12px 13px;border:1px solid var(--line);border-radius:15px;background:#f2f4ef;line-height:1.5;overflow-wrap:anywhere}
+.track-part small{display:block;color:var(--muted);font-size:11px;font-weight:750}
+.track-part b,.track-part strong{font-weight:850;font-variant-numeric:tabular-nums}
+.track-part .actual{color:var(--green)}
+.track-part .planned{color:var(--navy)}
+.track-records{display:grid;gap:8px}
+.track-record{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-width:0;min-height:48px;padding:11px 12px;border:1px solid var(--line);border-radius:13px;background:#fff;color:var(--ink);text-align:left;font-size:13px;line-height:1.5;overflow-wrap:anywhere}
+.track-record time{flex:0 1 auto;font-size:12px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--green);text-align:right}
+.track-record:active{background:var(--green2)}
+.track-message{margin:10px 0;color:#526057;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+.track-message:empty{display:none}
+.task-duration-touch small{display:block;color:var(--muted);font-size:10px;line-height:1.3}
+.task-duration-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.task-duration-row .task-duration-touch{flex:1 1 auto}
+.task-focus-button{display:block;width:100%;min-width:0;min-height:44px;margin:0;padding:0;border:0;background:transparent;color:inherit;text-align:left;font:inherit;line-height:1.5;overflow-wrap:anywhere}
+.task-focus-button:focus-visible{outline:3px solid var(--green);outline-offset:3px;border-radius:8px}
+.taskbreak .time-touch{flex:0 1 auto;min-width:44px;min-height:44px;width:auto;max-width:100%;padding:9px 10px;font-size:12px;line-height:1.5;white-space:normal;overflow-wrap:anywhere}
+.cube-plan-clock-title{margin:0 0 7px}
+.cube-plan-clock-title>.time-touch{min-height:54px;text-align:left;font-size:26px;font-weight:900;letter-spacing:-.04em}
+@media(max-width:350px){.track-summary>div{padding:11px}.track-summary strong{font-size:18px}.track-editor input[type=datetime-local],.track-edit input[type=datetime-local]{padding-inline:7px}}
