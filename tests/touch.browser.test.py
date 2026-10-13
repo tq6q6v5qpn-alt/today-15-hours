@@ -479,7 +479,7 @@ async def main():
               "service_workers": "block", "notification_permission_requested": False, "cases": []}
     try:
         async with async_playwright() as pw:
-            launch = {"headless": True, "args": ["--disable-gpu", "--disable-dev-shm-usage", "--renderer-process-limit=1"]}
+            launch = {"headless": True, "slow_mo": int(os.environ.get("TOUCH_TEST_SLOW_MO_MS", "0")), "args": ["--disable-gpu", "--disable-dev-shm-usage", "--renderer-process-limit=1"]}
             if os.environ.get("PLAYWRIGHT_CHROMIUM_EXECUTABLE"):
                 launch["executable_path"] = os.environ["PLAYWRIGHT_CHROMIUM_EXECUTABLE"]
             browser = await pw.chromium.launch(**launch)
