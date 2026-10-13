@@ -1,5 +1,5 @@
-const CACHE='today15-v18';
-const FILES=['./','./index.html','./styles.css?v=18','./core.js?v=18','./app.js?v=18','./manifest.webmanifest'];
+const CACHE='today15-v19';
+const FILES=['./','./index.html','./styles.css?v=19','./core.js?v=19','./tracking.js?v=19','./time-controls.js?v=19','./app.js?v=19','./manifest.webmanifest'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',event=>{
