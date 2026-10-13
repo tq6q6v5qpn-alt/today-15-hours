@@ -1,0 +1,150 @@
+{
+  "engine": "Chromium",
+  "synthetic_data_only": true,
+  "has_touch": true,
+  "is_mobile": true,
+  "physical_devices_exercised": false,
+  "service_workers": "block",
+  "cases": [
+    {
+      "name": "mobile_geometry",
+      "viewport": {
+        "width": 320,
+        "height": 568
+      },
+      "device": {
+        "width": 320,
+        "height": 568,
+        "touch": 1,
+        "coarse": true
+      },
+      "evidence": "Touch targets, native labels, narrow modal geometry, nested cancellation, focus trap, and background isolation",
+      "status": "passed",
+      "page_errors": []
+    },
+    {
+      "name": "phase_focus",
+      "viewport": {
+        "width": 320,
+        "height": 568
+      },
+      "evidence": "Real taps, redrawn home phase/completion focus, newly rendered repeat guard, one undo per rapid gesture, mutated modal focus return, edit cancellation and refresh preservation",
+      "status": "passed",
+      "page_errors": []
+    },
+    {
+      "name": "duration_apply_focus",
+      "viewport": {
+        "width": 320,
+        "height": 568
+      },
+      "evidence": "Saved duration application returns focus to redrawn trigger; actual and unknown fields survive refresh",
+      "status": "passed",
+      "page_errors": []
+    },
+    {
+      "name": "browser_back_cancel",
+      "viewport": {
+        "width": 320,
+        "height": 568
+      },
+      "evidence": "Browser Back navigates to previous document; Forward/reload discards drafts and preserves synthetic saved records",
+      "status": "passed",
+      "page_errors": []
+    },
+    {
+      "name": "mobile_geometry",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "device": {
+        "width": 360,
+        "height": 800,
+        "touch": 1,
+        "coarse": true
+      },
+      "evidence": "Touch targets, native labels, narrow modal geometry, nested cancellation, focus trap, and background isolation",
+      "status": "passed",
+      "page_errors": []
+    },
+    {
+      "name": "phase_focus",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "evidence": "Real taps, redrawn home phase/completion focus, newly rendered repeat guard, one undo per rapid gesture, mutated modal focus return, edit cancellation and refresh preservation",
+      "status": "passed",
+      "page_errors": []
+    },
+    {
+      "name": "duration_apply_focus",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "evidence": "Saved duration application returns focus to redrawn trigger; actual and unknown fields survive refresh",
+      "status": "passed",
+      "page_errors": []
+    },
+    {
+      "name": "browser_back_cancel",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "evidence": "Browser Back navigates to previous document; Forward/reload discards drafts and preserves synthetic saved records",
+      "status": "passed",
+      "page_errors": []
+    },
+    {
+      "name": "mobile_geometry",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "device": {
+        "width": 390,
+        "height": 844,
+        "touch": 1,
+        "coarse": true
+      },
+      "evidence": "Touch targets, native labels, narrow modal geometry, nested cancellation, focus trap, and background isolation",
+      "status": "passed",
+      "page_errors": []
+    },
+    {
+      "name": "phase_focus",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "evidence": "Real taps, redrawn home phase/completion focus, newly rendered repeat guard, one undo per rapid gesture, mutated modal focus return, edit cancellation and refresh preservation",
+      "status": "passed",
+      "page_errors": []
+    },
+    {
+      "name": "duration_apply_focus",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "evidence": "Saved duration application returns focus to redrawn trigger; actual and unknown fields survive refresh",
+      "status": "passed",
+      "page_errors": []
+    },
+    {
+      "name": "browser_back_cancel",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "evidence": "Browser Back navigates to previous document; Forward/reload discards drafts and preserves synthetic saved records",
+      "status": "passed",
+      "page_errors": []
+    }
+  ],
+  "passed": 12,
+  "failed": 0
+}

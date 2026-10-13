@@ -1,0 +1,13 @@
+PASS mobile-320x568-mobile_geometry
+PASS mobile-320x568-phase_focus
+PASS mobile-320x568-duration_apply_focus
+PASS mobile-320x568-browser_back_cancel
+PASS mobile-360x800-mobile_geometry
+PASS mobile-360x800-phase_focus
+PASS mobile-360x800-duration_apply_focus
+PASS mobile-360x800-browser_back_cancel
+PASS mobile-390x844-mobile_geometry
+PASS mobile-390x844-phase_focus
+PASS mobile-390x844-duration_apply_focus
+PASS mobile-390x844-browser_back_cancel
+Mobile checks: 12 passed, 0 failed

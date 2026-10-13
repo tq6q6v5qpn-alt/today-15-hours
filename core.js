@@ -232,11 +232,26 @@
     return value > 0 && value < DAY_MINUTES ? value : 0;
   }
 
+  function actualPrepEnd(task, logs) {
+    if (logs.depart) return logs.depart;
+    if (task.trackingVersion !== 1) return logs.start;
+    const skipped = Array.isArray(task.skippedStages) ? task.skippedStages : [];
+    if (skipped.includes('depart') || skipped.includes('arrive') || logs.arrive) return null;
+    // Recorded prep -> start actions establish a route without outbound travel.
+    // Later edits to the expected travel budget must not reclassify that interval.
+    const actions = Array.isArray(task.routeActions) ? task.routeActions : [];
+    const prepIndex = actions.findIndex(action => action?.type === 'record' && action.stage === 'prep');
+    const startIndex = actions.findIndex(action => action?.type === 'record' && action.stage === 'start');
+    const directStart = prepIndex >= 0 && startIndex > prepIndex &&
+      !actions.slice(prepIndex + 1, startIndex).some(action => ['depart', 'arrive'].includes(action?.stage));
+    // Imported records without action evidence retain their existing ambiguity.
+    return directStart || nonNegative(task.travelMin) === 0 ? logs.start : null;
+  }
+
   function actualParts(task = {}) {
     const logs = task.logs || {};
     const tracked = task.trackingVersion === 1;
-    const skippedDeparture = Array.isArray(task.skippedStages) && task.skippedStages.includes('depart');
-    const prepEnd = logs.depart || (tracked && (nonNegative(task.travelMin) > 0 || skippedDeparture) ? null : logs.start);
+    const prepEnd = actualPrepEnd(task, logs);
     const prep = diffMinutes(logs.prep, prepEnd);
     const travel = diffMinutes(logs.depart, logs.arrive) + (tracked ? 0 : diffMinutes(logs.end, logs.return));
     const activity = diffMinutes(logs.start, logs.end);
@@ -261,8 +276,7 @@
     };
     const hasReturnDepart = typeof logs.returnDepart === 'string' && !!logs.returnDepart;
     const tracked = task.trackingVersion === 1;
-    const skippedDeparture = Array.isArray(task.skippedStages) && task.skippedStages.includes('depart');
-    const prepEnd = logs.depart || (tracked && (nonNegative(task.travelMin) > 0 || skippedDeparture) ? null : logs.start);
+    const prepEnd = actualPrepEnd(task, logs);
     const parts = {
       prep: interval(logs.prep, prepEnd),
       outbound: interval(logs.depart, logs.arrive),

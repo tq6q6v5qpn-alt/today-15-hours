@@ -330,10 +330,22 @@ async def actual_phases(h):
     await p.locator(".track-detail summary").click()
     await expect(p.locator(".track-parts")).to_contain_text("예상 60분")
     await expect(p.locator(".track-parts")).to_contain_text("실제 0분")
-    await p.locator("#undoTrack").click()
+    await p.locator("#undoTrack").evaluate("el => {el.click();el.click()}")
     undone = await task()
     assert "return" not in undone["logs"] and undone.get("routeComplete") is not True
     assert all(undone["logs"][key] == value for key, value in complete["logs"].items() if key != "return")
+    assert len(undone["routeActions"]) == len(complete["routeActions"]) - 1, "repeat undo removed earlier records"
+    await p.clock.run_for(500)
+    await p.locator("#undoTrack").click()
+    twice_undone = await task()
+    assert "returnDepart" not in twice_undone["logs"] and twice_undone["logs"]["end"] == complete["logs"]["end"]
+    # The first undo remains available immediately after each new action.
+    await p.locator("#trackNext").click()
+    await p.locator("#undoTrack").evaluate("el => {el.click();el.click()}")
+    assert (await task())["logs"] == twice_undone["logs"]
+    await p.clock.run_for(500)
+    await p.locator("#trackNext").click()
+    await p.clock.run_for(500)
     await p.locator("#trackNext").evaluate("el => {el.click();el.click()}")
     assert (await task())["routeComplete"] is True
 
@@ -408,11 +420,41 @@ async def actual_phases(h):
     assert await h.calendar() == snapshot
     return ["Preparation/outbound/activity/wrap-up/return record ordered ISO endpoints with one current next action",
             "Repeated old buttons cannot overwrite or advance a different phase; refresh resumes the saved phase",
-            "Undo removes only the last phase; actual clock edit previews/cancels safely and rejects invalid chronology",
+            "Repeated undo touches remove only the last action; a delayed second undo and immediate undo of a new action remain available",
+            "Actual clock edit previews/cancels safely and rejects invalid chronology",
             "Tap/user-edited provenance is distinct, displayed, preserved by restore, and restored by edit undo",
             "Skipped actual stages retain no fabricated timestamps and show unknown, while an explicitly measured short interval shows zero",
             "Cross-midnight end stays in its original task record and appears in the actual completion date",
             "Schema 1 restore and refresh preserve new phase records, skipped stages, undo history, and unknown fields"]
+
+
+async def actual_plan_change(h):
+    p = h.page
+    await p.locator('#homeStart').click()
+    await p.locator('[data-home-start="0"]').click()
+    await p.clock.run_for(10 * 60 * 1000)
+    await p.locator('#homeActive [data-home-next]').click()
+    await p.clock.run_for(30 * 60 * 1000)
+    await p.locator('#homeActive [data-home-next]').click()
+    original = copy.deepcopy((await h.calendar())[TODAY]['tasks'][0])
+    expected = await p.evaluate("task => Today15Core.measuredParts(task)", original)
+    assert expected['prep'] == 10 and expected['total'] == 40
+    await p.locator('#homeRecords').click()
+    await set_duration(h, '#todayBody [data-task-duration="0"][data-task-field="travelMin"]', 60)
+    changed = (await h.calendar())[TODAY]['tasks'][0]
+    assert changed['travelMin'] == 60
+    assert changed['logs'] == original['logs'] and changed['routeActions'] == original['routeActions']
+    assert await p.evaluate("task => Today15Core.measuredParts(task)", changed) == expected
+    await p.locator('[data-open-track="0"]').click()
+    await p.locator('.track-detail summary').click()
+    await expect(p.locator('.track-part').filter(has=p.locator('strong', has_text='준비'))).to_contain_text('실제 10분')
+    await p.locator('#closeTrack').click()
+    await p.reload(wait_until='load')
+    restored = (await h.calendar())[TODAY]['tasks'][0]
+    assert restored == changed
+    assert await p.evaluate("task => Today15Core.measuredParts(task)", restored) == expected
+    return ['Recorded 10-minute preparation and 30-minute activity stay measured after changing expected travel from zero to 60 minutes',
+            'Expected-budget editing preserves actual timestamps/action history, visible measured preparation, and refresh persistence']
 
 
 async def mobile_touch(h):
@@ -467,6 +509,9 @@ async def main():
             {"id": "synthetic-midnight-phases", "name": "합성 자정 기록", "min": 5, "prepMin": 0,
              "travelMin": 0, "logs": {}}])}}),
         "mobile_touch": (mobile_touch, {"calendar": {TODAY: confirmed_day()}}),
+        "actual_plan_change": (actual_plan_change, {"calendar": {TODAY: confirmed_day(tasks=[{
+            "id": "synthetic-plan-separation", "name": "합성 준비 활동", "min": 30,
+            "prepMin": 10, "travelMin": 0, "logs": {}, "customTask": {"keep": True}}])}}),
     }
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--case", action="append", choices=cases)

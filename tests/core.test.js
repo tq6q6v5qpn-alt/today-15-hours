@@ -838,6 +838,44 @@ test('새 단계에서 출발을 생략하면 이동을 포함한 준비 시간�
   assert.equal(Core.measuredParts({ trackingVersion: 1, travelMin: 30, logs: { ...logs, depart: '2026-10-13T10:10:00+09:00' } }, now).prep, 10);
 });
 
+test('기록한 준비 구간은 예상 이동을 바꾸고 백업 복원해도 동일하다', () => {
+  const Tracking = require('../tracking.js');
+  const task = { min: 30, prepMin: 10, travelMin: 0, logs: {}, custom: { keep: true } };
+  for (const [stage, time] of [
+    ['prep', '2026-10-13T10:00:00+09:00'],
+    ['start', '2026-10-13T10:10:00+09:00'],
+    ['end', '2026-10-13T10:40:00+09:00']
+  ]) assert.equal(Tracking.advance(task, stage, new Date(time)).ok, true);
+  const now = new Date('2026-10-13T12:00:00+09:00');
+  const measured = Core.measuredParts(task, now), actual = Core.actualParts(task);
+  assert.equal(measured.prep, 10);
+  assert.equal(measured.total, 40);
+  const records = JSON.stringify({ logs: task.logs, routeActions: task.routeActions });
+  for (const travelMin of [60, 0, 600]) {
+    task.travelMin = travelMin;
+    assert.deepEqual(Core.measuredParts(task, now), measured);
+    assert.deepEqual(Core.actualParts(task), actual);
+    assert.equal(JSON.stringify({ logs: task.logs, routeActions: task.routeActions }), records);
+  }
+  const restored = JSON.parse(JSON.stringify(task));
+  assert.deepEqual(Core.measuredParts(restored, now), measured);
+  assert.deepEqual(restored.custom, { keep: true });
+});
+
+test('출발을 생략한 실제 기록은 예상 이동을 줄여도 미확인이다', () => {
+  const Tracking = require('../tracking.js');
+  const task = { min: 30, prepMin: 10, travelMin: 30, logs: {} };
+  assert.equal(Tracking.advance(task, 'prep', new Date('2026-10-13T10:00:00+09:00')).ok, true);
+  assert.equal(Tracking.skip(task, 'depart', new Date('2026-10-13T10:10:00+09:00')).ok, true);
+  assert.equal(Tracking.skip(task, 'arrive', new Date('2026-10-13T10:10:00+09:00')).ok, true);
+  assert.equal(Tracking.advance(task, 'start', new Date('2026-10-13T10:10:00+09:00')).ok, true);
+  for (const travelMin of [30, 0, 600]) {
+    task.travelMin = travelMin;
+    assert.equal(Core.measuredParts(task, new Date('2026-10-13T12:00:00+09:00')).prep, null);
+    assert.equal(Core.actualParts(task).prep, 0);
+  }
+});
+
 test('새 단계의 귀가 출발 생략은 이전 합산 귀가 기록으로 바꾸지 않는다', () => {
   const now = new Date('2026-10-13T12:00:00+09:00');
   const logs = { start: '2026-10-13T10:00:00+09:00', end: '2026-10-13T11:00:00+09:00', return: '2026-10-13T11:30:00+09:00' };

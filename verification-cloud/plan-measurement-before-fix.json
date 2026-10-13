@@ -1,0 +1,87 @@
+{
+  "baseline_commit": "be1064ce2adce8159083e941d6e73f2ae7080fc7",
+  "synthetic_data_only": true,
+  "task": {
+    "min": 30,
+    "prepMin": 10,
+    "travelMin": 60,
+    "logs": {
+      "prep": "2026-10-11T03:00:00.000Z",
+      "start": "2026-10-11T03:10:00.000Z",
+      "end": "2026-10-11T03:40:00.000Z"
+    },
+    "trackingVersion": 1,
+    "logOrigins": {
+      "prep": {
+        "type": "tap",
+        "changedAt": "2026-10-11T03:00:00.000Z"
+      },
+      "start": {
+        "type": "tap",
+        "changedAt": "2026-10-11T03:10:00.000Z"
+      },
+      "end": {
+        "type": "tap",
+        "changedAt": "2026-10-11T03:40:00.000Z"
+      }
+    },
+    "routeActions": [
+      {
+        "type": "record",
+        "stage": "prep",
+        "logsHad": true,
+        "routeCompleteHad": false,
+        "trackingVersionHad": false,
+        "logOriginsHad": false,
+        "logOriginHad": false
+      },
+      {
+        "type": "record",
+        "stage": "start",
+        "logsHad": true,
+        "routeCompleteHad": false,
+        "trackingVersionHad": true,
+        "trackingVersion": 1,
+        "logOriginsHad": true,
+        "logOriginHad": false
+      },
+      {
+        "type": "record",
+        "stage": "end",
+        "logsHad": true,
+        "routeCompleteHad": false,
+        "trackingVersionHad": true,
+        "trackingVersion": 1,
+        "logOriginsHad": true,
+        "logOriginHad": false
+      }
+    ]
+  },
+  "baseline_before_plan_change": {
+    "prep": 10,
+    "outbound": null,
+    "activity": 30,
+    "wrapUp": null,
+    "returnTravel": null,
+    "legacyReturn": null,
+    "total": 40
+  },
+  "baseline_after_plan_change": {
+    "prep": null,
+    "outbound": null,
+    "activity": 30,
+    "wrapUp": null,
+    "returnTravel": null,
+    "legacyReturn": null,
+    "total": 30
+  },
+  "fixed_after_plan_change": {
+    "prep": 10,
+    "outbound": null,
+    "activity": 30,
+    "wrapUp": null,
+    "returnTravel": null,
+    "legacyReturn": null,
+    "total": 40
+  }
+}

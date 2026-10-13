@@ -16,6 +16,7 @@
     let draft = null;
     let source = null;
     let background = [];
+    let sheetInert = null;
 
     function make(tag, properties = {}, text) {
       const node = document.createElement(tag);
@@ -89,6 +90,8 @@
       draft = null;
       sheet.classList.remove('on');
       sheet.setAttribute('aria-hidden', 'true');
+      if (sheetInert !== null) sheet.inert = sheetInert;
+      sheetInert = null;
       for (const { node, inert, ariaHidden } of background) {
         node.inert = inert;
         if (ariaHidden === null) node.removeAttribute('aria-hidden');
@@ -111,6 +114,8 @@
       preview.textContent = '';
       error.textContent = '';
       apply.disabled = false;
+      sheetInert = sheet.inert;
+      sheet.inert = false;
       sheet.setAttribute('aria-hidden', 'false');
       sheet.classList.add('on');
       sheet.querySelector('.sheet').scrollTop = 0;
@@ -280,8 +285,17 @@
       }
       const result = valueToApply();
       const callback = draft.onApply;
+      const previous = source;
+      const selector = previous?.dataset.taskDuration !== undefined
+        ? `[data-task-duration="${previous.dataset.taskDuration}"][data-task-field="${previous.dataset.taskField}"]`
+        : previous?.dataset.timeIndex !== undefined ? `.clock-touch[data-time-index="${previous.dataset.timeIndex}"]` : null;
       close();
       if (typeof callback === 'function') callback(result);
+      // Applying a saved plan redraws its buttons; restore focus to the
+      // replacement in the visible view instead of leaving it on the body.
+      if (selector && !previous.isConnected) {
+        document.querySelector(`.view.on ${selector}`)?.focus({ preventScroll: true });
+      }
     });
     cancel.addEventListener('click', close);
     sheet.addEventListener('click', event => { if (event.target === sheet) close(); });

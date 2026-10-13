@@ -215,10 +215,12 @@
   }
 
   function createUI({ element, Core, onChange }) {
-    let task = null, returnFocus = null, editing = null, message = '';
+    let task = null, returnFocus = null, resolveReturnFocus = null, editing = null, message = '', background = [];
     const lastUIStepAt = new WeakMap();
+    const lastUIUndoAt = new WeakMap();
     const uiNow = () => typeof performance !== 'undefined' && typeof performance.now === 'function' ? performance.now() : Date.now();
     const canRecordStep = value => !lastUIStepAt.has(value) || uiNow() - lastUIStepAt.get(value) >= 450;
+    const canUndoStep = value => !lastUIUndoAt.has(value) || uiNow() - lastUIUndoAt.get(value) >= 450;
     const recordUIStep = (value, result) => { if (result.ok) lastUIStepAt.set(value, uiNow()); };
     const query = selector => element.querySelector(selector);
     const esc = value => String(value === undefined ? '' : value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
@@ -237,22 +239,46 @@
     };
     const changed = (result, type) => {
       announce(result);
+      // An intervening action is immediately undoable; consecutive repeated
+      // touches on the persistent undo button must not erase earlier records.
+      if (result.ok && type !== 'track-undo') lastUIUndoAt.delete(task);
       if (result.ok && typeof onChange === 'function') onChange(task, { ...result, type });
       render();
       (query('#trackNext') || query('#undoTrack') || query('#closeTrack')).focus();
     };
     function close() {
+      const wasOpen = element.classList.contains('on');
       element.classList.remove('on'); editing = null; task = null;
-      if (returnFocus && returnFocus.isConnected) returnFocus.focus();
-      returnFocus = null;
+      for (const { node, inert, ariaHidden } of background) {
+        node.inert = inert;
+        if (ariaHidden === null) node.removeAttribute('aria-hidden');
+        else node.setAttribute('aria-hidden', ariaHidden);
+      }
+      background = [];
+      const canFocus = node => node && node !== document.body && node.isConnected && !node.disabled && !node.closest('[inert]') && node.getClientRects().length;
+      if (wasOpen) {
+        const target = canFocus(returnFocus) ? returnFocus : typeof resolveReturnFocus === 'function' ? resolveReturnFocus() : null;
+        if (canFocus(target)) target.focus({ preventScroll: true });
+      }
+      element.setAttribute('aria-hidden', 'true');
+      returnFocus = null; resolveReturnFocus = null;
     }
-    function open(value) {
+    function open(value, restoreFocus) {
       if (!value || typeof value !== 'object') return;
-      returnFocus = document.activeElement; task = value; editing = null; message = '';
+      if (element.classList.contains('on')) close();
+      returnFocus = document.activeElement; resolveReturnFocus = restoreFocus; task = value; editing = null; message = '';
       element.classList.add('on');
+      element.setAttribute('aria-hidden', 'false');
       const sheet = query('.sheet');
       sheet.setAttribute('role', 'dialog'); sheet.setAttribute('aria-modal', 'true'); sheet.setAttribute('aria-labelledby', 'trackTitle');
       render(); (query('#trackNext') || query('#closeTrack')).focus();
+      background = [...document.querySelectorAll('.app, .sheetbg')].filter(node => node !== element).map(node => ({
+        node, inert: node.inert, ariaHidden: node.getAttribute('aria-hidden')
+      }));
+      for (const { node } of background) {
+        node.inert = true;
+        node.setAttribute('aria-hidden', 'true');
+      }
     }
     function render() {
       if (!task) return;
@@ -309,7 +335,13 @@
         query('#trackCancelEdit').onclick = event => { if (!active(event) || !editing) return; const stage = editing.stage; editing = null; message = ''; render(); query(`[data-track-edit="${stage}"]`).focus(); };
       }
       query('#undoTrack').disabled = !knownLogs(task).length && !(Array.isArray(task.routeActions) && task.routeActions.length);
-      query('#undoTrack').onclick = event => { if (!active(event)) return; editing = null; changed(undo(task), 'track-undo'); };
+      query('#undoTrack').onclick = event => {
+        if (!active(event) || !canUndoStep(task)) return;
+        editing = null;
+        const result = undo(task);
+        if (result.ok) lastUIUndoAt.set(task, uiNow());
+        changed(result, 'track-undo');
+      };
       query('#closeTrack').onclick = close;
     }
     element.addEventListener('click', event => { if (event.target === element) close(); });
@@ -323,6 +355,7 @@
       if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
       else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
     });
+    element.setAttribute('aria-hidden', 'true');
     return { open, close, render };
   }
 

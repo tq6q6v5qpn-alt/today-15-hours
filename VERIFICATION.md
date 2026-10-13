@@ -1,6 +1,45 @@
 # 수정본 검증 기록
 
-갱신일: 2026-10-13. 이번 작업 영역은 `today-15-hours-touch`, 기준 main은 `faf3cc276216b55ac830104dd42d3a95980ef944`입니다. 기존 작업 파일·사용자 브라우저 기록을 보존하며 별도 브랜치에서 준비합니다. **이번 변경은 운영 미배포입니다.** 아래 기존 v18 검사는 이번 v19 브라우저 검사 통과를 뜻하지 않습니다.
+갱신일: 2026-10-13. 클라우드 별도 작업 사본은 `/workspace/today-15-hours`이며 PR #2의 최신 head `be1064ce2adce8159083e941d6e73f2ae7080fc7`을 먼저 확인했습니다. 기준 main은 `faf3cc276216b55ac830104dd42d3a95980ef944`입니다. **남은 클라우드 검증과 최소 수정의 회귀 검증을 완료했으며, 이번 변경은 초안·운영 미배포입니다.** 실제 기기·Safari·PWA 갱신은 미검증입니다. 아래 노트북 중단 이력과 기존 v18 검사 결과는 최신 클라우드 결과와 구분합니다.
+
+## 클라우드 최종 검증
+
+저장된 환경 이름은 jarvis였지만 이번 실행은 새로 clone한 `today-15-hours`에서만 수행했습니다. 관련 없는 코드·개인 자료·사용자 브라우저 프로필을 실행하거나 변경하지 않았습니다. `/AGENTS.md`, `/workspace/AGENTS.md`, 체크아웃의 `AGENTS.md`와 `.agents/skills`는 없었고 `/workspace/.agents`는 비어 있었습니다. 저장소의 README·PROJECT_CONTEXT·DATA_CONTRACT·기존 검증 문서를 먼저 확인했습니다.
+
+일반 GitHub clone/fetch와 제공된 Python Playwright·시스템 Chromium이 정상 작동했습니다. 인증정보 생성·접근 제한 우회·브라우저 설치는 필요하지 않았습니다. 노트북 전용 냉각 도구는 클라우드의 필수 의존성으로 사용하지 않았습니다.
+
+| 최종 검사 | 결과 | 재현 증거 |
+| --- | --- | --- |
+| `npm test` | **82개 통과, 실패 0** | 계산 60개·단계 전환 22개. `verification-cloud/unit-tests.txt` |
+| `tests/touch.browser.test.py` | **5개 통과, 실패 0** | sleep_touch·duration_touch·actual_phases·mobile_touch·actual_plan_change. `verification-cloud/final-touch/touch-browser-results.json` |
+| `tests/mobile.browser.test.py` | **12개 통과, 실패 0** | 320×568·360×800·390×844 각 4개 사례, `has_touch=true`·`is_mobile=true`·실제 `.tap()`. `verification-cloud/final-mobile/mobile-results.json` |
+| 문법·변경 검사 | 통과 | app/core/time-controls/tracking/sw의 `node --check`, `git diff --check` |
+
+모든 최종 브라우저 사례에서 페이지 오류 0, 검사 중 외부 자산 요청과 서비스워커는 차단했습니다. 새 컨텍스트·Asia/Seoul 가상 시계·합성 localStorage·현재 체크아웃 자산 스냅샷을 사용했습니다. 데이터 손실·복원·시각 정정 출처·자정 넘김·순서 역전/미래 시각 거부·반복 터치·생략의 미확인을 확인했습니다. 새로고침과 스키마 1 복원 후 실제 기록·생략·취소 이력·알 수 없는 필드를 유지했습니다.
+
+브라우저 뒤로 가기는 이전 문서로 이동합니다. 같은 출처의 합성 이전 문서에서 뒤로/앞으로와 새로고침을 검증했으며 미적용 수면·활동 초안이 저장되지 않고 기존 기록이 유지됐습니다. 뒤로 가기로 앱 안의 창을 닫는 새 탐색 기능은 추가하지 않았습니다.
+
+### 검증에서 발견하여 수정한 결함
+
+- **반복 되돌리기로 실제 기록 두 단계 삭제:** 정적 푸터 버튼을 두 번 누르면 두 이력이 삭제됐습니다. 450ms 연속 입력 방지를 추가했습니다. 지연한 두 번째 취소와 새로 기록·수정·생략한 동작의 즉시 취소는 유지합니다.
+- **계획 이동 수정으로 이미 측정한 준비시간 변경:** 실제 10분 준비·30분 활동 뒤 예상 이동을 0→60분으로 바꾸면 준비가 미확인이 되고 합계가 40→30분으로 달라졌습니다. 저장된 `prep → start` 기록 이력으로 직접 준비 구간을 해석하여 실측을 유지합니다. 생략/근거 없는 가져온 기록의 미확인과 기존 형식은 유지하며 새 저장 필드는 추가하지 않았습니다.
+- **수정 뒤 포커스 유실과 모달 배경 노출:** 화면 재렌더링 후 기록창 닫기가 숨겨진 버튼에, 계획 시간 적용·홈 다음 단계가 BODY에 포커스를 남겼습니다. 다시 만든 현재 버튼으로 포커스를 돌리고, 활동 선택·기록 모달의 배경 `inert`/`aria-hidden`을 열기 전 값으로 복구합니다. 중첩 시간창은 자기 `inert` 상태를 잠시 해제하고 닫을 때 복구합니다.
+
+수정 전 재현은 `verification-cloud/undo-before-fix.json`, `plan-measurement-before-fix.json`, `mobile-before-fix.json`에 있습니다. 최초 모바일 탐색 probe의 about:blank 이동에는 합성 seed의 sessionStorage 접근 오류가 포함됐습니다. 최종 재현 검사는 같은 출처의 이전 문서로 바꾸어 이 fixture 오류를 없앴으며 페이지 오류 0입니다. 새 계획/실측 분리 브라우저 검사에서 처음 선택한 비표시 중복 버튼은 `#todayBody`로 한정한 뒤 통과했습니다.
+
+최종 합성 화면 PNG 9개는 `verification-cloud/final-mobile/`에 있으며 실제 뷰포트 크기로 캡처했습니다. 기존 폭 검사 PNG 4개는 `verification-cloud/final-touch/`에 있습니다. Chromium 151.0.7922.173, Playwright 1.62.0, Python 3.12.14, Node v24.19.0을 사용했습니다. 실행 환경과 검사 대상 파일의 SHA-256은 `verification-cloud/environment.json`에 기록합니다.
+
+### 재실행
+
+제공된 Python에 Playwright와 호환 Chromium이 있어야 합니다. 실제 사용자 브라우저 프로필 없이 체크아웃 루트에서 실행합니다.
+
+```bash
+npm test
+PLAYWRIGHT_CHROMIUM_EXECUTABLE=/usr/bin/chromium python tests/touch.browser.test.py --output verification-cloud/final-touch
+PLAYWRIGHT_CHROMIUM_EXECUTABLE=/usr/bin/chromium python tests/mobile.browser.test.py --output verification-cloud/final-mobile
+```
+
+이 클라우드의 Chromium 터치·접근성 DOM 검증을 실제 iPhone Safari·Android 기기·스크린리더·OS 키보드·큰 글자 설정의 검증으로 주장하지 않습니다. 기존 사용자 PWA의 v19 캐시 전환/오프라인 갱신도 별도 미검증입니다. main 병합·운영 배포·잠금 화면·푸시 서버·위치 추적은 수행하지 않았습니다.
 
 ## 이번 수정본의 구현
 
@@ -11,9 +50,9 @@
 - 실측의 미확인 `null`과 0분 구분, 부분 합계 안내. 기존 `end → return` 합산 구간 보존; 마무리/귀가를 추정하여 분리하지 않음.
 - 기존 키·JSON 스키마 1·상세 네 탭·준비·이동·선택·이벤트·메타 유지. 학습·연령별 기본값·모션 권한 없음.
 
-## 이번 작업의 검사 상태
+## 노트북 중단 시점의 검사 상태 — 과거 이력
 
-이번 코드는 부하 중단 기준까지 검사했습니다. 통과 결과와 중단·미실행 범위를 구분합니다.
+아래는 클라우드로 옮기기 전 부하 중단 기준까지 검사했던 기록입니다. 최신 완료 상태는 위 클라우드 최종 검증에 있습니다.
 
 | 검사 | 실제 결과 | 범위·증거 |
 | --- | --- | --- |

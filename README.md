@@ -56,9 +56,10 @@
 npm test
 node tests/tracking.test.js
 python3 tests/touch.browser.test.py
+python3 tests/mobile.browser.test.py
 ```
 
-Python Playwright·Chromium 검사는 새 컨텍스트와 합성 기록만 사용합니다. 실제 사용자 브라우저 데이터를 읽거나 변경하지 않습니다. R530에서는 가벼운 검사부터 시작하고 80°C에 도달하면 부하 작업을 중단합니다.
+Python Playwright·Chromium 검사는 새 컨텍스트와 합성 기록만 사용합니다. 시스템 Chromium을 쓸 때는 `PLAYWRIGHT_CHROMIUM_EXECUTABLE=/usr/bin/chromium`을 지정할 수 있습니다. 클라우드 재현 명령과 최종 결과는 [VERIFICATION.md](VERIFICATION.md)에 있습니다. 실제 사용자 브라우저 데이터를 읽거나 변경하지 않습니다. R530에서는 가벼운 검사부터 시작하고 80°C에 도달하면 부하 작업을 중단합니다.
 
 ## 플랫폼 범위
 
