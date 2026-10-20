@@ -4,7 +4,7 @@
 
 - 앱: https://tq6q6v5qpn-alt.github.io/today-15-hours/
 - 운영 배포: GitHub Pages, `main` 브랜치 루트
-- 이번 수정: 별도 브랜치의 터치 시간 조절·실제 경로 수정본. 운영에는 아직 반영하지 않았습니다.
+- 변경 이력: [PR #2](https://github.com/tq6q6v5qpn-alt/today-15-hours/pull/2)의 터치 시간 조절·실제 경로 기록·캐시 보존 수정. 실제 반영 상태는 PR과 Pages 실행 기록에서 확인합니다.
 - 저장: 각 기기의 브라우저 `localStorage`
 - 백업: 앱 오른쪽 위 `•••` → **전체 기록 백업**
 
@@ -57,6 +57,7 @@ npm test
 node tests/tracking.test.js
 python3 tests/touch.browser.test.py
 python3 tests/mobile.browser.test.py
+python3 tests/pwa.browser.test.py
 ```
 
 Python Playwright·Chromium 검사는 새 컨텍스트와 합성 기록만 사용합니다. 시스템 Chromium을 쓸 때는 `PLAYWRIGHT_CHROMIUM_EXECUTABLE=/usr/bin/chromium`을 지정할 수 있습니다. 클라우드 재현 명령과 최종 결과는 [VERIFICATION.md](VERIFICATION.md)에 있습니다. 실제 사용자 브라우저 데이터를 읽거나 변경하지 않습니다. R530에서는 가벼운 검사부터 시작하고 80°C에 도달하면 부하 작업을 중단합니다.

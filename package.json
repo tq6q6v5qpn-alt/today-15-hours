@@ -3,6 +3,6 @@
   "version": "0.6.0",
   "private": true,
   "scripts": {
-    "test": "node --test --test-concurrency=1 tests/core.test.js tests/tracking.test.js"
+    "test": "node --test --test-concurrency=1 tests/core.test.js tests/tracking.test.js tests/sw.test.js"
   }
 }
