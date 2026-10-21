@@ -1,0 +1,22 @@
+{
+  "recorded_at_utc": "2026-10-20T06:02:57.969366+00:00",
+  "base_main": "faf3cc276216b55ac830104dd42d3a95980ef944",
+  "before_fix_head": "c68fc5d71fe5752dafe202882d43b50d1d6f5f6d",
+  "python": "3.12.14",
+  "playwright": "1.62.0",
+  "chromium": "Chromium 151.0.7922.173 built on Debian GNU/Linux 13 (trixie)",
+  "node": "v24.19.0",
+  "synthetic_data_only": true,
+  "source_sha256": {
+    "index.html": "e69864534d28a40c2c8e0539f7ae57ae4102ba6cce686da1eebb455e68a2e91a",
+    "styles.css": "b898bb641ac4d6932e261ebaf49a70105263d09c64877972c183e884985603ed",
+    "app.js": "6a7b3842ca9486c9374e772ba7c89de0de9b6b11c0cfdcfdeacda1f796642815",
+    "core.js": "407ae29a0b68dc30096df4e26d2a522366a5d183fe68524676d7189dd3d26b66",
+    "tracking.js": "791449866c27f9c6b5eb915cc9b64479866aa06b7193bfd0637d2582ca90799b",
+    "time-controls.js": "82c595763e0df8cac72c059ed6c63e535f192682d47cda8eae78f6fc76057198",
+    "sw.js": "bf6678199bcf82736268cbb76abfa4bf35b02b6df328b37ee892f3dbe4590d09",
+    "manifest.webmanifest": "bd5d63e3b84b0b3b3db6c801302e0bd297f132379a1b89a375ad852af9243c9f",
+    "tests/sw.test.js": "080f14b2bb2a6c33a2a403de2267bdc67a2964a10977cab7ecf82ef1965c36c5",
+    "tests/pwa.browser.test.py": "73cae51557c0a701115e4569deeefc15dcfce6c5513116cb494bbcd0a064bb8b"
+  }
+}

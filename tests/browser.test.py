@@ -802,4 +802,6 @@ async def main():
 
 
 if __name__ == "__main__":
-    raise SystemExit(asyncio.run(main()))
+    # Keep v18 fixture helpers/history, but run the current v19 suite.
+    import runpy
+    runpy.run_path(str(ROOT / "tests/touch.browser.test.py"), run_name="__main__")

@@ -1,0 +1,30 @@
+{
+  "baseline_commit": "be1064ce2adce8159083e941d6e73f2ae7080fc7",
+  "recorded_at_utc": "2026-10-13T04:20:55.370244+00:00",
+  "checkout": "/workspace/today-15-hours",
+  "repository": "https://github.com/tq6q6v5qpn-alt/today-15-hours",
+  "pr": 2,
+  "os": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "python": "3.12.14",
+  "playwright": "1.62.0",
+  "chromium": "Chromium 151.0.7922.173 built on Debian GNU/Linux 13 (trixie)",
+  "node": "v24.19.0",
+  "synthetic_data_only": true,
+  "browser_profile": "fresh isolated contexts",
+  "physical_devices_tested": false,
+  "safari_engine_tested": false,
+  "source_sha256": {
+    "index.html": "e69864534d28a40c2c8e0539f7ae57ae4102ba6cce686da1eebb455e68a2e91a",
+    "styles.css": "b898bb641ac4d6932e261ebaf49a70105263d09c64877972c183e884985603ed",
+    "app.js": "6a7b3842ca9486c9374e772ba7c89de0de9b6b11c0cfdcfdeacda1f796642815",
+    "core.js": "407ae29a0b68dc30096df4e26d2a522366a5d183fe68524676d7189dd3d26b66",
+    "time-controls.js": "82c595763e0df8cac72c059ed6c63e535f192682d47cda8eae78f6fc76057198",
+    "tracking.js": "791449866c27f9c6b5eb915cc9b64479866aa06b7193bfd0637d2582ca90799b",
+    "sw.js": "b712f5c8fb9acf397dab28a1d773c4f92e5b6b49bba6dd1d86a58f44015d2fea",
+    "manifest.webmanifest": "bd5d63e3b84b0b3b3db6c801302e0bd297f132379a1b89a375ad852af9243c9f",
+    "tests/core.test.js": "9dd0d0a32c38635bbea2b05547109de7a084b87c1f3042bd048f94ccfb7ed152",
+    "tests/tracking.test.js": "20020d636193d5d0f822f443587509e54c4229fc02d4648223ea55a00c310002",
+    "tests/touch.browser.test.py": "b553a405cc5ed5f38bd6e3470c27dd6bc71c891f846f61e25020edb3f1edca0b",
+    "tests/mobile.browser.test.py": "3bdd3162482f5c741e9011fb1ca2f5c00102b7b2282c67b566a63f1d888c6134"
+  }
+}

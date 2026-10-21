@@ -1,0 +1,510 @@
+{
+  "origin": "http://today15-touch.test",
+  "timezone": "Asia/Seoul",
+  "engine": "Chromium",
+  "physical_devices_tested": false,
+  "safari_engine_tested": false,
+  "synthetic_data_only": true,
+  "existing_browser_profile_used": false,
+  "service_workers": "block",
+  "notification_permission_requested": false,
+  "cases": [
+    {
+      "name": "sleep_touch",
+      "evidence": [
+        "Unset sleep has blank clock fields; preview/cancel does not save or invent values",
+        "23:30 to 08:00 saves 8.5 h and confirmation; refresh preserves the date-specific pair",
+        "Equal clocks explicitly distinguish 0/24 h; next-day bedtime remains active across midnight",
+        "Schema 1 restore preserves unconfirmed legacy 9 h/23:30 and unknown task/log/day fields"
+      ],
+      "status": "passed",
+      "page_errors": [],
+      "dialogs": [
+        {
+          "type": "confirm",
+          "message": "백업 기록을 현재 기기의 기록과 합칠까요? 같은 날짜는 백업 기록으로 바뀝니다.",
+          "accepted": true
+        },
+        {
+          "type": "alert",
+          "message": "백업 기록을 가져왔습니다.",
+          "accepted": true
+        }
+      ],
+      "requests": [
+        {
+          "url": "http://today15-touch.test/index.html",
+          "path": "index.html",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/styles.css?v=19",
+          "path": "styles.css",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/core.js?v=19",
+          "path": "core.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/tracking.js?v=19",
+          "path": "tracking.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/time-controls.js?v=19",
+          "path": "time-controls.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/app.js?v=19",
+          "path": "app.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/index.html",
+          "path": "index.html",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/styles.css?v=19",
+          "path": "styles.css",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/core.js?v=19",
+          "path": "core.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/tracking.js?v=19",
+          "path": "tracking.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/time-controls.js?v=19",
+          "path": "time-controls.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/app.js?v=19",
+          "path": "app.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/index.html",
+          "path": "index.html",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/styles.css?v=19",
+          "path": "styles.css",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/core.js?v=19",
+          "path": "core.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/tracking.js?v=19",
+          "path": "tracking.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/time-controls.js?v=19",
+          "path": "time-controls.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/app.js?v=19",
+          "path": "app.js",
+          "result": "local 200"
+        }
+      ],
+      "route_errors": []
+    },
+    {
+      "name": "duration_touch",
+      "evidence": [
+        "All shared duration fields allow zero; repeated +10 touch adds twice; cancel restores its draft",
+        "Activity/preparation/travel remain distinct and calendar writes occur only at the intended Apply/save",
+        "Quick/sudden/cube cancel preserves stored records; existing task duration and 23:50 clock persist after reload",
+        "Date-specific unknown fields and metadata remain intact"
+      ],
+      "status": "passed",
+      "page_errors": [],
+      "dialogs": [],
+      "requests": [
+        {
+          "url": "http://today15-touch.test/index.html",
+          "path": "index.html",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/styles.css?v=19",
+          "path": "styles.css",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/core.js?v=19",
+          "path": "core.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/tracking.js?v=19",
+          "path": "tracking.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/time-controls.js?v=19",
+          "path": "time-controls.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/app.js?v=19",
+          "path": "app.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/index.html",
+          "path": "index.html",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/styles.css?v=19",
+          "path": "styles.css",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/core.js?v=19",
+          "path": "core.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/tracking.js?v=19",
+          "path": "tracking.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/time-controls.js?v=19",
+          "path": "time-controls.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/app.js?v=19",
+          "path": "app.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/index.html",
+          "path": "index.html",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/styles.css?v=19",
+          "path": "styles.css",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/core.js?v=19",
+          "path": "core.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/tracking.js?v=19",
+          "path": "tracking.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/time-controls.js?v=19",
+          "path": "time-controls.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/app.js?v=19",
+          "path": "app.js",
+          "result": "local 200"
+        }
+      ],
+      "route_errors": []
+    },
+    {
+      "name": "actual_phases",
+      "evidence": [
+        "Preparation/outbound/activity/wrap-up/return record ordered ISO endpoints with one current next action",
+        "Repeated old buttons cannot overwrite or advance a different phase; refresh resumes the saved phase",
+        "Repeated undo touches remove only the last action; a delayed second undo and immediate undo of a new action remain available",
+        "Actual clock edit previews/cancels safely and rejects invalid chronology",
+        "Tap/user-edited provenance is distinct, displayed, preserved by restore, and restored by edit undo",
+        "Skipped actual stages retain no fabricated timestamps and show unknown, while an explicitly measured short interval shows zero",
+        "Cross-midnight end stays in its original task record and appears in the actual completion date",
+        "Schema 1 restore and refresh preserve new phase records, skipped stages, undo history, and unknown fields"
+      ],
+      "status": "passed",
+      "page_errors": [],
+      "dialogs": [
+        {
+          "type": "confirm",
+          "message": "백업 기록을 현재 기기의 기록과 합칠까요? 같은 날짜는 백업 기록으로 바뀝니다.",
+          "accepted": true
+        },
+        {
+          "type": "alert",
+          "message": "백업 기록을 가져왔습니다.",
+          "accepted": true
+        }
+      ],
+      "requests": [
+        {
+          "url": "http://today15-touch.test/index.html",
+          "path": "index.html",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/styles.css?v=19",
+          "path": "styles.css",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/core.js?v=19",
+          "path": "core.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/tracking.js?v=19",
+          "path": "tracking.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/time-controls.js?v=19",
+          "path": "time-controls.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/app.js?v=19",
+          "path": "app.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/index.html",
+          "path": "index.html",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/styles.css?v=19",
+          "path": "styles.css",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/core.js?v=19",
+          "path": "core.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/tracking.js?v=19",
+          "path": "tracking.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/time-controls.js?v=19",
+          "path": "time-controls.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/app.js?v=19",
+          "path": "app.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/index.html",
+          "path": "index.html",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/styles.css?v=19",
+          "path": "styles.css",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/core.js?v=19",
+          "path": "core.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/tracking.js?v=19",
+          "path": "tracking.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/time-controls.js?v=19",
+          "path": "time-controls.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/app.js?v=19",
+          "path": "app.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/index.html",
+          "path": "index.html",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/styles.css?v=19",
+          "path": "styles.css",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/core.js?v=19",
+          "path": "core.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/tracking.js?v=19",
+          "path": "tracking.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/time-controls.js?v=19",
+          "path": "time-controls.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/app.js?v=19",
+          "path": "app.js",
+          "result": "local 200"
+        }
+      ],
+      "route_errors": []
+    },
+    {
+      "name": "mobile_touch",
+      "evidence": [
+        "320/390 CSS-pixel Chromium viewports have no horizontal overflow or extra home action clutter",
+        "Native clock inputs have labels, dialog aria semantics, and touch controls at least 44 px high",
+        "Tab remains inside the modal; Escape restores focus and nested editor cancellation preserves records",
+        "Screenshots are synthetic Chromium viewport evidence; Safari/iPhone/Android physical devices not exercised"
+      ],
+      "status": "passed",
+      "page_errors": [],
+      "dialogs": [],
+      "requests": [
+        {
+          "url": "http://today15-touch.test/index.html",
+          "path": "index.html",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/styles.css?v=19",
+          "path": "styles.css",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/core.js?v=19",
+          "path": "core.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/tracking.js?v=19",
+          "path": "tracking.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/time-controls.js?v=19",
+          "path": "time-controls.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/app.js?v=19",
+          "path": "app.js",
+          "result": "local 200"
+        }
+      ],
+      "route_errors": []
+    },
+    {
+      "name": "actual_plan_change",
+      "evidence": [
+        "Recorded 10-minute preparation and 30-minute activity stay measured after changing expected travel from zero to 60 minutes",
+        "Expected-budget editing preserves actual timestamps/action history, visible measured preparation, and refresh persistence"
+      ],
+      "status": "passed",
+      "page_errors": [],
+      "dialogs": [],
+      "requests": [
+        {
+          "url": "http://today15-touch.test/index.html",
+          "path": "index.html",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/styles.css?v=19",
+          "path": "styles.css",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/core.js?v=19",
+          "path": "core.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/tracking.js?v=19",
+          "path": "tracking.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/time-controls.js?v=19",
+          "path": "time-controls.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/app.js?v=19",
+          "path": "app.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/index.html",
+          "path": "index.html",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/styles.css?v=19",
+          "path": "styles.css",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/core.js?v=19",
+          "path": "core.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/tracking.js?v=19",
+          "path": "tracking.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/time-controls.js?v=19",
+          "path": "time-controls.js",
+          "result": "local 200"
+        },
+        {
+          "url": "http://today15-touch.test/app.js?v=19",
+          "path": "app.js",
+          "result": "local 200"
+        }
+      ],
+      "route_errors": []
+    }
+  ],
+  "passed": 5,
+  "failed": 0,
+  "artifacts": [
+    "mobile-320-touch-home.png",
+    "mobile-320-touch-sleep.png",
+    "mobile-390-touch-home.png",
+    "mobile-390-touch-sleep.png"
+  ]
+}

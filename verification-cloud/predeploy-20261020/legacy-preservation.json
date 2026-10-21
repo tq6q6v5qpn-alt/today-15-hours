@@ -1,0 +1,32 @@
+{
+  "head": "c68fc5d71fe5752dafe202882d43b50d1d6f5f6d",
+  "working_files_sha256": {
+    "app.js": "6a7b3842ca9486c9374e772ba7c89de0de9b6b11c0cfdcfdeacda1f796642815",
+    "core.js": "407ae29a0b68dc30096df4e26d2a522366a5d183fe68524676d7189dd3d26b66",
+    "tracking.js": "791449866c27f9c6b5eb915cc9b64479866aa06b7193bfd0637d2582ca90799b",
+    "time-controls.js": "82c595763e0df8cac72c059ed6c63e535f192682d47cda8eae78f6fc76057198",
+    "sw.js": "bf6678199bcf82736268cbb76abfa4bf35b02b6df328b37ee892f3dbe4590d09",
+    "index.html": "e69864534d28a40c2c8e0539f7ae57ae4102ba6cce686da1eebb455e68a2e91a"
+  },
+  "synthetic_only": true,
+  "service_workers": "blocked",
+  "checks": [
+    {
+      "legacy_key_only": true,
+      "initial_migration_unchanged": true,
+      "cancel_unchanged": true,
+      "schema_1_export_unknown_fields_preserved": true,
+      "refresh_unchanged": true,
+      "page_errors": []
+    },
+    {
+      "legacy_key_only": false,
+      "initial_migration_unchanged": true,
+      "cancel_unchanged": true,
+      "schema_1_export_unknown_fields_preserved": true,
+      "refresh_unchanged": true,
+      "page_errors": []
+    }
+  ],
+  "passed": true
+}

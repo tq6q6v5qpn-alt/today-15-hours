@@ -1,0 +1,467 @@
+{
+  "baseline_sha": "faf3cc276216b55ac830104dd42d3a95980ef944",
+  "candidate_source": "immutable checkout snapshot",
+  "production_accessed": false,
+  "synthetic_data_only": true,
+  "physical_devices_exercised": false,
+  "cases": [
+    {
+      "name": "v18_initial_install_and_legacy_storage_fixture",
+      "status": "passed"
+    },
+    {
+      "name": "v18_offline_reload_preserves_records",
+      "status": "passed"
+    },
+    {
+      "name": "v18_unsaved_sleep_draft_does_not_write",
+      "status": "passed"
+    },
+    {
+      "name": "v18_to_v19_localStorage_byte_identical_including_old_key",
+      "status": "passed"
+    },
+    {
+      "name": "only_known_retired_v18_cache_removed",
+      "status": "passed"
+    },
+    {
+      "name": "unrelated_and_unknown_cache_payloads_preserved",
+      "status": "passed",
+      "preserved_names": [
+        "synthetic-other-project-offline-v1",
+        "sibling-app-cache-v1",
+        "today15-v17",
+        "today15-v999",
+        "today15-v18-extra"
+      ]
+    },
+    {
+      "name": "current_namespace_extra_payload_preserved",
+      "status": "passed"
+    },
+    {
+      "name": "v19_modules_and_css_precached",
+      "status": "passed"
+    },
+    {
+      "name": "v19_offline_reload_and_editor_preserve_records",
+      "status": "passed"
+    },
+    {
+      "name": "v19_offline_directory_start_url",
+      "status": "passed"
+    },
+    {
+      "name": "all_synthetic_payloads_preserved_after_offline_reload",
+      "status": "passed"
+    },
+    {
+      "name": "offline_current_shell_and_module_ignore_unknown_cache_collisions",
+      "status": "passed"
+    },
+    {
+      "name": "offline_reload_with_stale_same_url_entries_uses_v19",
+      "status": "passed"
+    },
+    {
+      "name": "uncached_offline_navigation_uses_current_cached_index",
+      "status": "passed"
+    },
+    {
+      "name": "stale_same_url_payloads_remain_untouched",
+      "status": "passed"
+    },
+    {
+      "name": "no_page_errors_or_external_requests",
+      "status": "passed"
+    }
+  ],
+  "checkout_head": "c68fc5d71fe5752dafe202882d43b50d1d6f5f6d",
+  "asset_sha256": {
+    "v18": {
+      "index.html": "6ca1e0b0871575151e6065cb177ea37a4ae13fd83545f960a0fa302589e69855",
+      "styles.css": "20d7cefce9b28abdafb183f7efe102638df5fb7a5f961fede14386a7fdf2e543",
+      "core.js": "f756584a9779398cb2ce56c5227d8d529f5315cb7fd297535c0aca9026be869f",
+      "app.js": "f4296f7274949c2d45530fc175bc6835dc5fc24fb7aea8fdbf479b2a72e18c0f",
+      "sw.js": "d071eab0a17c3b34db647bcf61ee3fd36e2e356836f51cfaad9300643aee2baa",
+      "manifest.webmanifest": "bd5d63e3b84b0b3b3db6c801302e0bd297f132379a1b89a375ad852af9243c9f"
+    },
+    "candidate": {
+      "index.html": "e69864534d28a40c2c8e0539f7ae57ae4102ba6cce686da1eebb455e68a2e91a",
+      "styles.css": "b898bb641ac4d6932e261ebaf49a70105263d09c64877972c183e884985603ed",
+      "core.js": "407ae29a0b68dc30096df4e26d2a522366a5d183fe68524676d7189dd3d26b66",
+      "app.js": "6a7b3842ca9486c9374e772ba7c89de0de9b6b11c0cfdcfdeacda1f796642815",
+      "tracking.js": "791449866c27f9c6b5eb915cc9b64479866aa06b7193bfd0637d2582ca90799b",
+      "time-controls.js": "82c595763e0df8cac72c059ed6c63e535f192682d47cda8eae78f6fc76057198",
+      "sw.js": "bf6678199bcf82736268cbb76abfa4bf35b02b6df328b37ee892f3dbe4590d09",
+      "manifest.webmanifest": "bd5d63e3b84b0b3b3db6c801302e0bd297f132379a1b89a375ad852af9243c9f"
+    }
+  },
+  "origin": "http://127.0.0.1:40115",
+  "requests": [
+    {
+      "revision": "v18",
+      "path": "/today-15-hours/index.html",
+      "status": 200
+    },
+    {
+      "revision": "v18",
+      "path": "/today-15-hours/styles.css?v=18",
+      "status": 200
+    },
+    {
+      "revision": "v18",
+      "path": "/today-15-hours/app.js?v=18",
+      "status": 200
+    },
+    {
+      "revision": "v18",
+      "path": "/today-15-hours/core.js?v=18",
+      "status": 200
+    },
+    {
+      "revision": "v18",
+      "path": "/today-15-hours/sw.js",
+      "status": 200
+    },
+    {
+      "revision": "v18",
+      "path": "/today-15-hours/",
+      "status": 200
+    },
+    {
+      "revision": "v18",
+      "path": "/today-15-hours/index.html",
+      "status": 200
+    },
+    {
+      "revision": "v18",
+      "path": "/today-15-hours/styles.css?v=18",
+      "status": 200
+    },
+    {
+      "revision": "v18",
+      "path": "/today-15-hours/core.js?v=18",
+      "status": 200
+    },
+    {
+      "revision": "v18",
+      "path": "/today-15-hours/app.js?v=18",
+      "status": 200
+    },
+    {
+      "revision": "v18",
+      "path": "/today-15-hours/manifest.webmanifest",
+      "status": 200
+    },
+    {
+      "revision": "v18",
+      "path": "/today-15-hours/index.html",
+      "status": 200
+    },
+    {
+      "revision": "v18",
+      "path": "/today-15-hours/styles.css?v=18",
+      "status": 200
+    },
+    {
+      "revision": "v18",
+      "path": "/today-15-hours/core.js?v=18",
+      "status": 200
+    },
+    {
+      "revision": "v18",
+      "path": "/today-15-hours/app.js?v=18",
+      "status": 200
+    },
+    {
+      "revision": "v18",
+      "path": "/favicon.ico",
+      "status": 404
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/sw.js",
+      "status": 200
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/",
+      "status": 200
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/index.html",
+      "status": 200
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/styles.css?v=19",
+      "status": 200
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/core.js?v=19",
+      "status": 200
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/tracking.js?v=19",
+      "status": 200
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/time-controls.js?v=19",
+      "status": 200
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/app.js?v=19",
+      "status": 200
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/manifest.webmanifest",
+      "status": 200
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/sw.js",
+      "status": 200
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/index.html",
+      "status": 200
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/styles.css?v=19",
+      "status": 200
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/core.js?v=19",
+      "status": 200
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/tracking.js?v=19",
+      "status": 200
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/time-controls.js?v=19",
+      "status": 200
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/app.js?v=19",
+      "status": 200
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/sw.js",
+      "status": 200
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/sw.js",
+      "status": 200
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/sw.js",
+      "status": 200
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/sw.js",
+      "status": 200
+    },
+    {
+      "revision": "candidate",
+      "path": "/today-15-hours/sw.js",
+      "status": 200
+    }
+  ],
+  "page_errors": [],
+  "external_requests": [],
+  "v18_storage": {
+    "today15hours_v2": "{\"date\":\"2026-10-20\",\"sleep\":9,\"sleepAt\":\"23:30\",\"tasks\":[{\"id\":\"synthetic-pwa-legacy\",\"name\":\"합성 기존 종료 활동\",\"min\":60,\"prepMin\":10,\"travelMin\":20,\"start\":\"13:00\",\"logs\":{\"start\":\"2026-10-20T01:00:00.000Z\",\"end\":\"2026-10-20T01:40:00.000Z\"},\"customTask\":{\"synthetic\":\"keep\"}},{\"id\":\"synthetic-pwa-planned\",\"name\":\"합성 아직 시작하지 않은 계획\",\"min\":30,\"prepMin\":0,\"travelMin\":0,\"logs\":{},\"customTask\":{\"synthetic\":\"keep\"}}],\"events\":[{\"id\":\"synthetic-old-event\",\"type\":\"recorded\",\"at\":\"2026-10-20T01:40:00.000Z\",\"custom\":\"keep\"}],\"choice\":\"합성 기존 선택\",\"customDay\":{\"synthetic\":\"keep\"}}",
+    "today15_grid_v1": "48",
+    "synthetic_other_app_user_data": "synthetic unrelated localStorage preserved",
+    "today15_calendar_v3": "{\"2026-10-20\":{\"date\":\"2026-10-20\",\"sleep\":9,\"sleepAt\":\"23:30\",\"tasks\":[{\"id\":\"synthetic-pwa-legacy\",\"name\":\"합성 기존 종료 활동\",\"min\":60,\"prepMin\":10,\"travelMin\":20,\"start\":\"13:00\",\"logs\":{\"start\":\"2026-10-20T01:00:00.000Z\",\"end\":\"2026-10-20T01:40:00.000Z\"},\"customTask\":{\"synthetic\":\"keep\"}},{\"id\":\"synthetic-pwa-planned\",\"name\":\"합성 아직 시작하지 않은 계획\",\"min\":30,\"prepMin\":0,\"travelMin\":0,\"logs\":{},\"customTask\":{\"synthetic\":\"keep\"}}],\"events\":[{\"id\":\"synthetic-old-event\",\"type\":\"recorded\",\"at\":\"2026-10-20T01:40:00.000Z\",\"custom\":\"keep\"}],\"choice\":\"합성 기존 선택\",\"customDay\":{\"synthetic\":\"keep\"}},\"2026-10-19\":{\"date\":\"2026-10-19\",\"sleep\":7.5,\"sleepAt\":\"00:00\",\"tasks\":[],\"events\":[],\"choice\":\"합성 과거 선택\",\"unknown\":\"keep\"}}",
+    "today15_feedback_v1": "합성 피드백",
+    "today15_meta_v4": "{\"fixed\":[{\"id\":\"synthetic-birthday\",\"date\":\"2026-10-20\",\"name\":\"합성 기념일\",\"yearly\":true}],\"customMeta\":{\"synthetic\":\"keep\"}}"
+  },
+  "v18_caches": {
+    "today15-v18": [
+      "http://127.0.0.1:40115/today-15-hours/",
+      "http://127.0.0.1:40115/today-15-hours/manifest.webmanifest",
+      "http://127.0.0.1:40115/today-15-hours/index.html",
+      "http://127.0.0.1:40115/today-15-hours/styles.css?v=18",
+      "http://127.0.0.1:40115/today-15-hours/core.js?v=18",
+      "http://127.0.0.1:40115/today-15-hours/app.js?v=18",
+      "http://127.0.0.1:40115/favicon.ico"
+    ]
+  },
+  "before_update_caches": {
+    "today15-v18": [
+      "http://127.0.0.1:40115/today-15-hours/",
+      "http://127.0.0.1:40115/today-15-hours/manifest.webmanifest",
+      "http://127.0.0.1:40115/today-15-hours/index.html",
+      "http://127.0.0.1:40115/today-15-hours/styles.css?v=18",
+      "http://127.0.0.1:40115/today-15-hours/core.js?v=18",
+      "http://127.0.0.1:40115/today-15-hours/app.js?v=18",
+      "http://127.0.0.1:40115/favicon.ico"
+    ],
+    "synthetic-other-project-offline-v1": [
+      "http://127.0.0.1:40115/synthetic-cache-probe/0.json"
+    ],
+    "sibling-app-cache-v1": [
+      "http://127.0.0.1:40115/synthetic-cache-probe/1.json"
+    ],
+    "today15-v17": [
+      "http://127.0.0.1:40115/synthetic-cache-probe/2.json"
+    ],
+    "today15-v999": [
+      "http://127.0.0.1:40115/synthetic-cache-probe/3.json"
+    ],
+    "today15-v18-extra": [
+      "http://127.0.0.1:40115/synthetic-cache-probe/4.json"
+    ],
+    "today15-v19": [
+      "http://127.0.0.1:40115/synthetic-cache-probe/5.json"
+    ]
+  },
+  "before_update_synthetic_payloads": {
+    "synthetic-other-project-offline-v1": {
+      "body": "{\"synthetic\": \"offline-only-user-document\", \"cache\": \"synthetic-other-project-offline-v1\", \"text\": \"합성 보존 자료\"}",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "marker": "synthetic-0"
+    },
+    "sibling-app-cache-v1": {
+      "body": "{\"synthetic\": \"offline-only-user-document\", \"cache\": \"sibling-app-cache-v1\", \"text\": \"합성 보존 자료\"}",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "marker": "synthetic-1"
+    },
+    "today15-v17": {
+      "body": "{\"synthetic\": \"offline-only-user-document\", \"cache\": \"today15-v17\", \"text\": \"합성 보존 자료\"}",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "marker": "synthetic-2"
+    },
+    "today15-v999": {
+      "body": "{\"synthetic\": \"offline-only-user-document\", \"cache\": \"today15-v999\", \"text\": \"합성 보존 자료\"}",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "marker": "synthetic-3"
+    },
+    "today15-v18-extra": {
+      "body": "{\"synthetic\": \"offline-only-user-document\", \"cache\": \"today15-v18-extra\", \"text\": \"합성 보존 자료\"}",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "marker": "synthetic-4"
+    },
+    "today15-v19": {
+      "body": "{\"synthetic\": \"offline-only-user-document\", \"cache\": \"today15-v19\", \"text\": \"합성 보존 자료\"}",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "marker": "synthetic-5"
+    }
+  },
+  "v19_caches": {
+    "synthetic-other-project-offline-v1": [
+      "http://127.0.0.1:40115/synthetic-cache-probe/0.json"
+    ],
+    "sibling-app-cache-v1": [
+      "http://127.0.0.1:40115/synthetic-cache-probe/1.json"
+    ],
+    "today15-v17": [
+      "http://127.0.0.1:40115/synthetic-cache-probe/2.json"
+    ],
+    "today15-v999": [
+      "http://127.0.0.1:40115/synthetic-cache-probe/3.json"
+    ],
+    "today15-v18-extra": [
+      "http://127.0.0.1:40115/synthetic-cache-probe/4.json"
+    ],
+    "today15-v19": [
+      "http://127.0.0.1:40115/synthetic-cache-probe/5.json",
+      "http://127.0.0.1:40115/today-15-hours/",
+      "http://127.0.0.1:40115/today-15-hours/manifest.webmanifest",
+      "http://127.0.0.1:40115/today-15-hours/index.html",
+      "http://127.0.0.1:40115/today-15-hours/styles.css?v=19",
+      "http://127.0.0.1:40115/today-15-hours/core.js?v=19",
+      "http://127.0.0.1:40115/today-15-hours/tracking.js?v=19",
+      "http://127.0.0.1:40115/today-15-hours/time-controls.js?v=19",
+      "http://127.0.0.1:40115/today-15-hours/app.js?v=19"
+    ]
+  },
+  "after_update_synthetic_payloads": {
+    "synthetic-other-project-offline-v1": {
+      "body": "{\"synthetic\": \"offline-only-user-document\", \"cache\": \"synthetic-other-project-offline-v1\", \"text\": \"합성 보존 자료\"}",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "marker": "synthetic-0"
+    },
+    "sibling-app-cache-v1": {
+      "body": "{\"synthetic\": \"offline-only-user-document\", \"cache\": \"sibling-app-cache-v1\", \"text\": \"합성 보존 자료\"}",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "marker": "synthetic-1"
+    },
+    "today15-v17": {
+      "body": "{\"synthetic\": \"offline-only-user-document\", \"cache\": \"today15-v17\", \"text\": \"합성 보존 자료\"}",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "marker": "synthetic-2"
+    },
+    "today15-v999": {
+      "body": "{\"synthetic\": \"offline-only-user-document\", \"cache\": \"today15-v999\", \"text\": \"합성 보존 자료\"}",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "marker": "synthetic-3"
+    },
+    "today15-v18-extra": {
+      "body": "{\"synthetic\": \"offline-only-user-document\", \"cache\": \"today15-v18-extra\", \"text\": \"합성 보존 자료\"}",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "marker": "synthetic-4"
+    },
+    "today15-v19": {
+      "body": "{\"synthetic\": \"offline-only-user-document\", \"cache\": \"today15-v19\", \"text\": \"합성 보존 자료\"}",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "marker": "synthetic-5"
+    }
+  },
+  "offline_namespace_probes": [
+    {
+      "url": "http://127.0.0.1:40115/today-15-hours/index.html",
+      "usesCurrentCandidate": true,
+      "stalePayloadPreserved": true,
+      "servedStalePayload": false
+    },
+    {
+      "url": "http://127.0.0.1:40115/today-15-hours/core.js?v=19",
+      "usesCurrentCandidate": true,
+      "stalePayloadPreserved": true,
+      "servedStalePayload": false
+    }
+  ],
+  "final_storage": {
+    "today15hours_v2": "{\"date\":\"2026-10-20\",\"sleep\":9,\"sleepAt\":\"23:30\",\"tasks\":[{\"id\":\"synthetic-pwa-legacy\",\"name\":\"합성 기존 종료 활동\",\"min\":60,\"prepMin\":10,\"travelMin\":20,\"start\":\"13:00\",\"logs\":{\"start\":\"2026-10-20T01:00:00.000Z\",\"end\":\"2026-10-20T01:40:00.000Z\"},\"customTask\":{\"synthetic\":\"keep\"}},{\"id\":\"synthetic-pwa-planned\",\"name\":\"합성 아직 시작하지 않은 계획\",\"min\":30,\"prepMin\":0,\"travelMin\":0,\"logs\":{},\"customTask\":{\"synthetic\":\"keep\"}}],\"events\":[{\"id\":\"synthetic-old-event\",\"type\":\"recorded\",\"at\":\"2026-10-20T01:40:00.000Z\",\"custom\":\"keep\"}],\"choice\":\"합성 기존 선택\",\"customDay\":{\"synthetic\":\"keep\"}}",
+    "today15_grid_v1": "48",
+    "synthetic_other_app_user_data": "synthetic unrelated localStorage preserved",
+    "today15_calendar_v3": "{\"2026-10-20\":{\"date\":\"2026-10-20\",\"sleep\":9,\"sleepAt\":\"23:30\",\"tasks\":[{\"id\":\"synthetic-pwa-legacy\",\"name\":\"합성 기존 종료 활동\",\"min\":60,\"prepMin\":10,\"travelMin\":20,\"start\":\"13:00\",\"logs\":{\"start\":\"2026-10-20T01:00:00.000Z\",\"end\":\"2026-10-20T01:40:00.000Z\"},\"customTask\":{\"synthetic\":\"keep\"}},{\"id\":\"synthetic-pwa-planned\",\"name\":\"합성 아직 시작하지 않은 계획\",\"min\":30,\"prepMin\":0,\"travelMin\":0,\"logs\":{},\"customTask\":{\"synthetic\":\"keep\"}}],\"events\":[{\"id\":\"synthetic-old-event\",\"type\":\"recorded\",\"at\":\"2026-10-20T01:40:00.000Z\",\"custom\":\"keep\"}],\"choice\":\"합성 기존 선택\",\"customDay\":{\"synthetic\":\"keep\"}},\"2026-10-19\":{\"date\":\"2026-10-19\",\"sleep\":7.5,\"sleepAt\":\"00:00\",\"tasks\":[],\"events\":[],\"choice\":\"합성 과거 선택\",\"unknown\":\"keep\"}}",
+    "today15_feedback_v1": "합성 피드백",
+    "today15_meta_v4": "{\"fixed\":[{\"id\":\"synthetic-birthday\",\"date\":\"2026-10-20\",\"name\":\"합성 기념일\",\"yearly\":true}],\"customMeta\":{\"synthetic\":\"keep\"}}"
+  },
+  "passed": 16,
+  "failed": 0
+}

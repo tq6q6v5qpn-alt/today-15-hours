@@ -1,0 +1,131 @@
+{
+  "device": {
+    "width": 320,
+    "height": 568,
+    "touch": 1,
+    "mobile": true
+  },
+  "selector_background": {
+    "inert": false,
+    "ariaHidden": null
+  },
+  "nested_duration": {
+    "focus": {
+      "id": "adjustDuration",
+      "tag": "INPUT",
+      "visible": true,
+      "inHiddenSheet": false
+    },
+    "dimensions": {
+      "client": 292,
+      "scroll": 292,
+      "rect": {
+        "x": 14,
+        "y": 54.171875,
+        "width": 292,
+        "height": 499.828125,
+        "top": 54.171875,
+        "right": 306,
+        "bottom": 554,
+        "left": 14
+      }
+    }
+  },
+  "nested_cancel_focus": {
+    "id": "homeNewDuration",
+    "tag": "BUTTON",
+    "visible": true,
+    "inHiddenSheet": false
+  },
+  "tracking_background": {
+    "inert": false,
+    "ariaHidden": null
+  },
+  "tracking_dimensions": {
+    "client": 292,
+    "scroll": 292,
+    "rect": {
+      "x": 14,
+      "y": 54.171875,
+      "width": 292,
+      "height": 499.828125,
+      "top": 54.171875,
+      "right": 306,
+      "bottom": 554,
+      "left": 14
+    }
+  },
+  "tracking_close_before_change": {
+    "id": "",
+    "tag": "BUTTON",
+    "visible": true,
+    "inHiddenSheet": false
+  },
+  "tracking_close_after_change": {
+    "id": "closeTrack",
+    "tag": "BUTTON",
+    "visible": false,
+    "inHiddenSheet": true
+  },
+  "datetime_dimensions": {
+    "client": 254,
+    "scroll": 254,
+    "rect": {
+      "x": 32,
+      "y": 396.03125,
+      "width": 256,
+      "height": 54,
+      "top": 396.03125,
+      "right": 288,
+      "bottom": 450.03125,
+      "left": 32
+    }
+  },
+  "datetime_sheet_dimensions": {
+    "client": 292,
+    "scroll": 292,
+    "rect": {
+      "x": 14,
+      "y": 54.171875,
+      "width": 292,
+      "height": 499.828125,
+      "top": 54.171875,
+      "right": 306,
+      "bottom": 554,
+      "left": 14
+    }
+  },
+  "edit_escape": {
+    "unchanged": true,
+    "focus": {
+      "id": "",
+      "tag": "BUTTON",
+      "visible": true,
+      "inHiddenSheet": false
+    }
+  },
+  "repeated_undo": {
+    "before": {
+      "prep": "2026-10-11T03:00:01.000Z",
+      "depart": "2026-10-11T03:01:01.000Z"
+    },
+    "after": {},
+    "removed": 2
+  },
+  "duration_apply_focus": {
+    "id": "",
+    "tag": "BODY",
+    "visible": true,
+    "inHiddenSheet": false
+  },
+  "duration_apply_value": 50,
+  "browser_back_url": "about:blank",
+  "browser_back_cancellation": {
+    "unchanged": true,
+    "modalOpen": false,
+    "url": "http://today15-touch.test/index.html"
+  },
+  "errors": [
+    "Failed to read the 'sessionStorage' property from 'Window': Access is denied for this document."
+  ]
+}
